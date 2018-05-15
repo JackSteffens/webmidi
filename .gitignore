@@ -1,0 +1,14 @@
+## Intellij
+*.iml
+.idea/*
+!.idea/codeStyleSettings.xml
+!.idea/codeStyles/
+out/
+
+
+## Node, npm & Gulp
+.node_modules/*
+.public/dist/*
+
+## Misc
+.DS_Store
