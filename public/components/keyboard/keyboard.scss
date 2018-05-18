@@ -1,0 +1,25 @@
+.key-sharp {
+  height: 80px;
+  margin: 0 -13px;
+  z-index: 2;
+  background-color: rgb(50, 50, 50);
+}
+
+.key-regular {
+  height: 120px;
+  margin: 0 1px;
+  z-index: 1;
+  background-color: white;
+}
+
+.key-regular, .key-sharp {
+  display: block;
+  width: 24px;
+  min-width: 24px;
+  border: 1px solid black;
+}
+
+.keyboard-container {
+  outline: 1px solid green;
+  background-color: rgb(250, 250, 250);
+}

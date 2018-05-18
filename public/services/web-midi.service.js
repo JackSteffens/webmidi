@@ -1,5 +1,5 @@
 'use strict';
-angular.module('WebMIDI').service('WebMidi', function ($q) {
+angular.module('WebMIDI').service('WebMidi', function ($q, Command) {
     var selectedMIDIInput, selectedMIDIOutput;
 
     this.getSelectedMIDIInput = getSelectedMIDIInput;
@@ -10,19 +10,31 @@ angular.module('WebMIDI').service('WebMidi', function ($q) {
     this.requestMIDIAccess = requestMIDIAccess;
     this.getMIDIOutputs = getMIDIOutputs;
     this.send = send;
+    this.virtualSend = virtualSend;
 
     function getSelectedMIDIInput() {
         return selectedMIDIInput;
     }
 
     function send(port, data) {
-        console.log('Sending data to ' + port.id + '');
+        console.log('Sending data to ' + port.name);
         port.send(data);
     }
 
     /**
+     *
+     * @param {Tone.Synth} synth
+     * @param {?} data a note
+     */
+    function virtualSend(synth, data) {
+        var note = Command.getNote(data[1]);
+        console.log('VIRTUAL NOTE PLAYING ' + data + ' Note : ' + note);
+        synth.triggerAttack(note, undefined, 0.5); // note, delay, velocity (data[1], ?, data[2])
+    }
+
+    /**
      * TODO
-     * @param {Array<Number>} dataArray
+     * @param {Uint8Array|Array<Number>} dataArray
      */
     function readMIDIEvent(dataArray) {
         var command = dataArray[0];

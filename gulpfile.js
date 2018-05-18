@@ -79,6 +79,8 @@ gulp.task('libs', gulp.series('modernizr', function () {
         'node_modules/angular-material/angular-material.min.js',
         'node_modules/angular-sanitize/angular-sanitize.min.js',
         'node_modules/angular-cookies/angular-cookies.min.js',
+        'node_modules/socket.io-client/dist/socket.io.js',
+        'node_modules/tone/build/Tone.min.js',
 
         'public//dist/modernizr.js'
     ])

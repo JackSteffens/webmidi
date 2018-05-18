@@ -1,0 +1,23 @@
+<div layout="row" layout-align="center center" class="midi-selector-container">
+    <div layout="column" class="midi-selector-input-column">
+        <md-content ng-repeat="input in inputs"
+                    class="midi-selector-cell"
+                    md-ink-ripple
+                    ng-click="doShit(input)">
+            <div class="midi-selector-state-indicator"
+                 ng-class="input.connection === 'open' ? 'state-open' : 'state-closed'"></div>
+            <span>{{input.name}}</span>
+        </md-content>
+    </div>
+
+    <div layout="column">
+        <md-content ng-repeat="output in outputs"
+                    class="midi-selector-cell"
+                    md-ink-ripple
+                    ng-click="doShit(output)">
+            <div class="midi-selector-state-indicator"
+                 ng-class="output.connection === 'open' ? 'state-open' : 'state-closed'"></div>
+            <span>{{output.name}}</span>
+        </md-content>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div layout="column" class="keyboard-container">
+    <span>Output name : {{keyboardModel.outputName}}</span>
+    <div style="overflow-x: auto">
+        <div layout="row">
+            <div ng-class="key.sharp ? 'key-sharp' : 'key-regular'"
+                 ng-repeat="key in keyboardModel.keys"
+                 ng-click="sendToOutput([144, key.number, velocity])">
+            </div>
+        </div>
+    </div>
+</div>

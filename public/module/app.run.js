@@ -1,4 +1,6 @@
 'use strict';
-angular.module('WebMIDI').run(function ($rootScope) {
+angular.module('WebMIDI').run(function ($rootScope, Socket) {
+    Socket.init();
+
 
 });

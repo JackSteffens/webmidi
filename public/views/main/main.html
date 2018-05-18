@@ -1,44 +1,35 @@
 <div layout-margin>
     <h1>Select a MIDI device</h1>
 
-    <div layout="row">
-        <div layout="column" style="margin-right:2em;">
-            <md-input-container>
-                <label>Input</label>
-                <md-select ng-model="midiSelectedInput">
-                    <md-option ng-repeat="input in midiInputs" ng-value="input">
-                        {{input.id}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-            <md-button ng-click="selectPort(midiSelectedInput)">
-                Connect
-            </md-button>
-            <span>Selected input state: {{midiSelectedInput.connection}}</span>
-        </div>
+    <midi-selector
+            inputs="midiInputs"
+            outputs="midiOutputs"
+            selected-input="midiSelectedInput"
+            selected-output="midiSelectedOutput"
+            select-port="selectPort">
+    </midi-selector>
 
-        <div layout="column">
-            <md-input-container>
-                <label>Input</label>
-                <md-select ng-model="midiSelectedOutput">
-                    <md-option ng-repeat="output in midiOutputs" ng-value="output">
-                        {{output.id}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-            <md-button ng-click="selectPort(midiSelectedOutput)">
-                Connect
-            </md-button>
-            <span>Selected output state: {{midiSelectedOutput.connection}}</span>
-        </div>
+    <div layout="column">
+        <span>Selected output state: {{midiSelectedOutput.connection}}</span>
+        <span>Selected input state: {{midiSelectedInput.connection}}</span>
+        <span> Min key : {{minKey}}</span>
+        <span> Max key : {{maxKey}}</span>
+        <span> Last command: {{lastCommand}}</span>
     </div>
+
     <md-button
             ng-disabled="
             !midiSelectedOutput ||
             !midiSelectedInput ||
             (midiSelectedOutput && midiSelectedOutput.connection === 'closed') ||
             (midiSelectedInput && midiSelectedInput.connection === 'closed')"
-            ui-sref="login">
+            ui-sref="login"
+            class="md-raised md-primary">
         Continue
     </md-button>
+
+    <keyboard keyboard-model="keyboardModel"></keyboard>
+
+    <md-button ng-click="resetKeys()">reset {{keys.length}} keys</md-button>
+    <md-button ng-click="createVirtualKeyboard(21, 108)">Create virtual keyboard</md-button>
 </div>

@@ -9,9 +9,10 @@ var bodyParser = require('body-parser');  // Application headers
 var config = require('./config.js');      // Config params
 var router = require('./router.js');      // Controller routing
 var colors = require('colors');           // Console colors
+var websocket = require('./server/utils/websocket.js'); // Global socket.io websocket
 
 // Configuration
-mongoose.connect(config.DATABASE, function(err) {
+mongoose.connect(config.DATABASE, function (err) {
     if (err) {
         console.log(('[!] Unable to connect to database.\n').red + (err).toString().yellow);
         return process.exit();
@@ -19,18 +20,19 @@ mongoose.connect(config.DATABASE, function(err) {
 }); // Connect to DB
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({'extended' : 'true'}));
+app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
-app.use(bodyParser.json({type : 'application/vnd.api+json'}));
+app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 
 // Set routing
 router.setRequestUrl(app);
 
 // Socket.io
 var server = require('http').createServer(app); // Server, required for socket.io
+websocket.init(server);
 
 // Start server
-server.listen(3000, 'localhost', function() {
+server.listen(3000, 'localhost', function () {
     console.log(
         "---------------------------------------------------------\n\n" +
         "                        Server name                        \n" +
