@@ -1,6 +1,6 @@
 'use strict';
 angular.module('WebMIDI').factory('InputPort', function (WebMidi) {
-    return function OutputPort(virtual, port) {
+    return function InputPort(virtual, port) {
         this.isVirtual = virtual;
         this.MIDIInput = port;
         this.id = port.id;

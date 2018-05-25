@@ -9,6 +9,7 @@ angular.module('WebMIDI').service('Command', function () {
 
     function init() {
         initNotes();
+        console.debug(notes);
     }
 
     function initNotes() {

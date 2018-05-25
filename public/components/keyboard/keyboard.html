@@ -1,10 +1,14 @@
-<div layout="column" class="keyboard-container">
+<div layout="column" class="keyboard-container" layout-align="start center">
     <span>Output name : {{keyboardModel.outputName}}</span>
     <div style="overflow-x: auto">
         <div layout="row">
-            <div ng-class="key.sharp ? 'key-sharp' : 'key-regular'"
+            <div class="keyboard-key"
+                 ng-class="[key.sharp ? 'keyboard-key-sharp' : 'keyboard-key-regular', key.active ? 'keyboard-key-active' : 'keyboard-key-non-active']"
                  ng-repeat="key in keyboardModel.keys"
-                 ng-click="sendToOutput([144, key.number, velocity])">
+                 ng-mousedown="sendToOutput(144, key, velocity)"
+                 ng-mouseleave="key.active ? sendToOutput(144, key, 0) : angular.noop()"
+                 ng-mouseup="sendToOutput(144, key, 0)">
+                <span>{{key.note}}</span>
             </div>
         </div>
     </div>

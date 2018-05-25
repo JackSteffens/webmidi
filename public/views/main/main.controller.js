@@ -1,6 +1,5 @@
 'use strict';
-angular.module('WebMIDI').controller('MainCtrl', function ($scope, $state, $q, WebMidi, OutputPort, Key, Command, KeyboardModel) {
-    $scope.login = login;
+angular.module('WebMIDI').controller('MainCtrl', function ($rootScope, $scope, $state, $q, WebMidi, MockMIDIOutput, Key, Command, KeyboardModel) {
     $scope.selectPort = selectPort;
     $scope.resetKeys = resetKeys;
     $scope.createVirtualKeyboard = createVirtualKeyboard;
@@ -15,12 +14,8 @@ angular.module('WebMIDI').controller('MainCtrl', function ($scope, $state, $q, W
     $scope.keys = [];
     $scope.keyboardModel = null;
 
-    function login() {
-        $state.go('login', $scope.username);
-    }
-
     function createVirtualKeyboard(minKey, maxKey) {
-        virtualOutputPort = new OutputPort(true, {id: 'virtualID', name: 'virtualName'});
+        virtualOutputPort = new MockMIDIOutput('virtual id', 'virtual name', angular.noop());
         $scope.minKey = minKey;
         $scope.maxKey = maxKey;
         renderKeyboard();
@@ -46,7 +41,6 @@ angular.module('WebMIDI').controller('MainCtrl', function ($scope, $state, $q, W
             });
 
         $scope.$watch('lastCommand', function (newCommand) {
-            console.log('lastCommand updated!');
             if (newCommand) {
                 if (newCommand[0] === 144) {
                     if (newCommand[1] < $scope.minKey || $scope.minKey === null) {
@@ -63,13 +57,13 @@ angular.module('WebMIDI').controller('MainCtrl', function ($scope, $state, $q, W
 
     function renderKeyboard() {
         if (hasValidOutput()) {
-            var keys = [];
+            $scope.keys = [];
             if ($scope.minKey && $scope.maxKey) {
                 for (var keyNumber = $scope.minKey; keyNumber <= $scope.maxKey; keyNumber++) {
-                    keys.push(new Key(keyNumber));
+                    $scope.keys.push(new Key(keyNumber));
                 }
             }
-            $scope.keyboardModel = new KeyboardModel($scope.midiSelectedOutput, keys);
+            $scope.keyboardModel = new KeyboardModel($scope.midiSelectedInput, $scope.midiSelectedOutput, $scope.keys);
         } else {
             throw new Error('No output to bind keyboard to');
         }
@@ -88,28 +82,34 @@ angular.module('WebMIDI').controller('MainCtrl', function ($scope, $state, $q, W
     function resetKeys() {
         $scope.minKey = null;
         $scope.maxKey = null;
-        $scope.keys = [];
+        renderKeyboard();
     }
 
+    /**
+     * TODO MOVE TO MIDI SERVICE
+     * @param port
+     */
     function selectPort(port) {
-        console.log('selecting a port');
         port.open().then(function (midiPort) {
             if (midiPort instanceof MIDIInput) {
                 $scope.midiSelectedInput = midiPort;
                 WebMidi.setSelectedMIDIInput(midiPort);
                 midiPort.onmidimessage = function (note) {
-                    console.log('Received note from input ' + midiPort.name);
-                    console.log(note);
                     $scope.lastCommand = Array.from(note.data);
+                    $rootScope.$broadcast('keyevent', note);
                     $scope.$applyAsync();
                 };
-            } else if (midiPort instanceof MIDIOutput) {
+            } else if (midiPort instanceof MIDIOutput || midiPort instanceof MockMIDIOutput) {
                 $scope.midiSelectedOutput = midiPort;
-                WebMidi.setSelectedMIDIOutput(midiPort)
+                WebMidi.setSelectedMIDIOutput(midiPort);
             } else {
                 console.error('Not a MIDIPort');
             }
-            console.log(port);
+
+            if (hasValidOutput()) {
+                renderKeyboard();
+            }
+
             $scope.$applyAsync();
             console.log('Successfully opened port for ' + midiPort.constructor.name + ' | ' + midiPort.id);
         }, function (error) {

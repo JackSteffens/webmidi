@@ -29,7 +29,11 @@ angular.module('WebMIDI').service('WebMidi', function ($q, Command) {
     function virtualSend(synth, data) {
         var note = Command.getNote(data[1]);
         console.log('VIRTUAL NOTE PLAYING ' + data + ' Note : ' + note);
-        synth.triggerAttack(note, undefined, 0.5); // note, delay, velocity (data[1], ?, data[2])
+        if (data[0] === 144) {
+            synth.triggerAttack(note, undefined, data[2]); // note, delay, velocity (data[1], ?, data[2])
+        } else {
+            synth.triggerRelease(note);
+        }
     }
 
     /**
@@ -65,9 +69,12 @@ angular.module('WebMIDI').service('WebMidi', function ($q, Command) {
      */
     function setSelectedMIDIOutput(output) {
         if (selectedMIDIOutput && selectedMIDIOutput.close) {
-            selectedMIDIOutput.close();
+            selectedMIDIOutput.close().then(function () {
+                selectedMIDIOutput = output;
+            });
+        } else {
+            selectedMIDIOutput = output;
         }
-        selectedMIDIOutput = output;
     }
 
     function getMIDIInputs() {
