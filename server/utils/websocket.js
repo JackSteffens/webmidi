@@ -1,9 +1,9 @@
 // Configuration
 function init(server) {
     var io = require('socket.io')(server);          // Socket.io
-    io.on('connection', function () {
+    io.on('connect', function () {
         console.log('[i] Client connected to websocket');
-        io.emit('test', 'You were already connected. Someone else just did too');
+        io.emit('connected', 'Websocket has been connected'); // TODO Don't globally broadcast
     });
 }
 
@@ -16,7 +16,18 @@ function broadcast(channel, message) {
     io.emit(channel, message);
 }
 
+/**
+ *
+ * @param room
+ * @param channel
+ * @param message
+ */
+function broadcastRoom(room, channel, message) {
+    io.sockets.in(room).emit(channel, message);
+}
+
 module.exports = {
     init: init,
-    broadcast: broadcast
+    broadcast: broadcast,
+    broadcastRoom: broadcastRoom
 };

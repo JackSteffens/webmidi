@@ -11,13 +11,7 @@ angular.module('WebMIDI').service('Socket', function ($http, Api) {
     function init() {
         socket = io.connect(domain);
 
-        // socket.join('connected');
-        socket.on('test', function (data) {
-            console.log(data);
-            // socket.emit('my other event', { my: 'data' });
-        });
-
-        socket.on('update', function (data) {
+        socket.on('connected', function (data) {
             console.log(data);
         });
     }

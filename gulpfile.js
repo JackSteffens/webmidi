@@ -13,12 +13,12 @@ var sass = require('gulp-sass');
 var config = {
     paths: {
         dev: {
-            html: 'public/**/*.html',
+            html: ['public/**/*.html', '!public/redirect/**'],
             sass: {
                 global: 'public/**/global.scss',
                 components: 'public/**/*.scss'
             },
-            js: ['public/**/*.js', '!public/**/*.spec.js', '!public/dist/**'],
+            js: ['public/**/*.js', '!public/**/*.spec.js', '!public/dist/**', '!public/views/redirect/**'],
             index: 'public/root.html'
         },
         build: {
@@ -73,6 +73,7 @@ gulp.task('libs', gulp.series('modernizr', function () {
         'node_modules/jquery/dist/jquery.min.js',
         'node_modules/angular/angular.min.js',
         'node_modules/@uirouter/angularjs/release/angular-ui-router.js',
+        'node_modules/@uirouter/angularjs/release/stateEvents.js',
         'node_modules/angular-animate/angular-animate.min.js',
         'node_modules/angular-aria/angular-aria.min.js',
         'node_modules/angular-messages/angular-messages.min.js',

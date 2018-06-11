@@ -1,17 +1,26 @@
 'use strict';
 angular.module('WebMIDI').config(function ($urlRouterProvider, $stateProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/lobby');
     $stateProvider
-        .state('main', {
-            title: 'Main',
-            templateUrl: '../views/main/main.html',
-            controller: 'MainCtrl',
-            url: '/'
-        })
         .state('login', {
             title: 'Login',
             templateUrl: '../views/login/login.html',
             controller: 'LoginCtrl',
-            url: '/login'
+            url: '/login?access_token',
+            authenticate: false
+        })
+        .state('setup', {
+            title: 'Setup',
+            templateUrl: '../views/main/main.html',
+            controller: 'MainCtrl',
+            url: '/setup',
+            authenticate: true
+        })
+        .state('lobby', {
+            title: 'Lobby',
+            templateUrl: '../views/lobby/lobby.html',
+            controller: 'LobbyCtrl',
+            url: '/lobby',
+            authenticate: true
         });
 });

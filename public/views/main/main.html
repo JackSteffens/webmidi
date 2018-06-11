@@ -17,19 +17,20 @@
         <span> Last command: {{lastCommand}}</span>
     </div>
 
+    <keyboard keyboard-model="keyboardModel"></keyboard>
+
+    <md-button ng-click="resetKeys()">reset {{keys.length}} keys</md-button>
+    <md-button ng-click="createVirtualKeyboard(21, 108)">Create virtual keyboard</md-button>
+
     <md-button
             ng-disabled="
             !midiSelectedOutput ||
             !midiSelectedInput ||
             (midiSelectedOutput && midiSelectedOutput.connection === 'closed') ||
-            (midiSelectedInput && midiSelectedInput.connection === 'closed')"
-            ui-sref="login"
+            (midiSelectedInput && midiSelectedInput.connection === 'closed') ||
+            keys.length === 0"
+            ui-sref="lobby"
             class="md-raised md-primary">
         Continue
     </md-button>
-
-    <keyboard keyboard-model="keyboardModel"></keyboard>
-
-    <md-button ng-click="resetKeys()">reset {{keys.length}} keys</md-button>
-    <md-button ng-click="createVirtualKeyboard(21, 108)">Create virtual keyboard</md-button>
 </div>
