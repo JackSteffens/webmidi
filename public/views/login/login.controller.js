@@ -25,7 +25,7 @@ angular.module('WebMIDI').controller('LoginCtrl', function ($scope, WebMidi, $st
             'client_id': '439345663761-vinca9jn7fsonkj8bg6pdjr39kuevdka.apps.googleusercontent.com',
             'redirect_uri': 'http://localhost:3000/redirect',
             'response_type': 'token',
-            'scope': 'https://www.googleapis.com/auth/plus.me',
+            'scope': 'https://www.googleapis.com/auth/userinfo.profile',
             'include_granted_scopes': 'true',
             'state': 'pass-through value',
             'prompt': 'consent'

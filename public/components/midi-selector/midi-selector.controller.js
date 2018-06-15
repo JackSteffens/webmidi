@@ -8,7 +8,6 @@ angular.module('WebMIDI').controller('MidiSelectorCtrl', function ($scope, $q, W
      * @param {MIDIInput|MIDIOutput|MockMIDIOutput}port
      */
     function open(port) {
-        console.log('doShit()' + port.id);
         $scope.selectPort(port);
     }
 });

@@ -37,7 +37,7 @@ function getProfile(req, res) {
     var accessToken = req.query.access_token;
     if (accessToken) {
         request({
-            url: 'https://www.googleapis.com/auth/plus.me',
+            url: 'https://www.googleapis.com/auth/userinfo.profile',
             qs: {access_token: accessToken}
         }, function (error, response, body) {
             if (error) {

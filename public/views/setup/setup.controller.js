@@ -1,5 +1,5 @@
 'use strict';
-angular.module('WebMIDI').controller('MainCtrl', function ($rootScope, $scope, $state, $q, WebMidi, MockMIDIOutput, Key, Command, KeyboardModel) {
+angular.module('WebMIDI').controller('SetupCtrl', function ($rootScope, $scope, $state, $q, WebMidi, MockMIDIOutput, Key, Command, KeyboardModel) {
     $scope.selectPort = selectPort;
     $scope.resetKeys = resetKeys;
     $scope.createVirtualKeyboard = createVirtualKeyboard;
@@ -56,7 +56,7 @@ angular.module('WebMIDI').controller('MainCtrl', function ($rootScope, $scope, $
     }
 
     function renderKeyboard() {
-        if (hasValidOutput()) {
+        if (hasValidSelectedOutput()) {
             $scope.keys = [];
             if ($scope.minKey && $scope.maxKey) {
                 for (var keyNumber = $scope.minKey; keyNumber <= $scope.maxKey; keyNumber++) {
@@ -69,7 +69,7 @@ angular.module('WebMIDI').controller('MainCtrl', function ($rootScope, $scope, $
         }
     }
 
-    function hasValidOutput() {
+    function hasValidSelectedOutput() {
         return ($scope.midiSelectedOutput && $scope.midiSelectedOutput.connection && $scope.midiSelectedOutput.connection === 'open');
     }
 
@@ -91,7 +91,7 @@ angular.module('WebMIDI').controller('MainCtrl', function ($rootScope, $scope, $
      */
     function selectPort(port) {
         port.open().then(function (midiPort) {
-            if (midiPort instanceof MIDIInput) {
+            if (isValidInput(midiPort)) {
                 $scope.midiSelectedInput = midiPort;
                 WebMidi.setSelectedMIDIInput(midiPort);
                 midiPort.onmidimessage = function (note) {
@@ -99,14 +99,14 @@ angular.module('WebMIDI').controller('MainCtrl', function ($rootScope, $scope, $
                     $rootScope.$broadcast('keyevent', note);
                     $scope.$applyAsync();
                 };
-            } else if (midiPort instanceof MIDIOutput || midiPort instanceof MockMIDIOutput) {
+            } else if (isValidOutput(midiPort)) {
                 $scope.midiSelectedOutput = midiPort;
                 WebMidi.setSelectedMIDIOutput(midiPort);
             } else {
                 console.error('Not a MIDIPort');
             }
 
-            if (hasValidOutput()) {
+            if (hasValidSelectedOutput()) {
                 renderKeyboard();
             }
 
@@ -115,6 +115,14 @@ angular.module('WebMIDI').controller('MainCtrl', function ($rootScope, $scope, $
         }, function (error) {
             console.error(error);
         });
+    }
+
+    function isValidInput(midiPort) {
+        return (midiPort instanceof MIDIInput && midiPort !== $scope.midiSelectedInput);
+    }
+
+    function isValidOutput(midiPort) {
+        return ((midiPort instanceof MIDIOutput || midiPort instanceof MockMIDIOutput) && midiPort !== $scope.midiSelectedOutput);
     }
 
     init();

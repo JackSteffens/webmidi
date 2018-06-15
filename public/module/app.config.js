@@ -11,8 +11,8 @@ angular.module('WebMIDI').config(function ($urlRouterProvider, $stateProvider) {
         })
         .state('setup', {
             title: 'Setup',
-            templateUrl: '../views/main/main.html',
-            controller: 'MainCtrl',
+            templateUrl: '../views/setup/setup.html',
+            controller: 'SetupCtrl',
             url: '/setup',
             authenticate: true
         })
