@@ -1,0 +1,1 @@
+// TODO Upon server restart, go through all rooms and clear their users[] field.

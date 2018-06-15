@@ -5,7 +5,8 @@ angular.module('WebMIDI').service('Api', function () {
     this.baseUrl = this.domain + '/api';
 
     this.url = {
-        room: this.baseUrl + '/room',
+        room: this.baseUrl + '/room/',
+        rooms: this.baseUrl + '/rooms/',
         user: this.baseUrl + '/user',
         profile: this.baseUrl + '/profile',
         oauth: 'https://accounts.google.com/o/oauth2/v2/auth',
