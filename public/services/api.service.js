@@ -15,6 +15,7 @@ angular.module('WebMIDI').service('Api', function () {
 
     this.cookie = {
         access_token: 'access_token',
-        access_token_exp: 'access_token_exp'
+        access_token_exp: 'access_token_exp',
+        session: 'connect.sid'
     };
 });

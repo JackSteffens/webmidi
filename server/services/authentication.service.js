@@ -12,6 +12,8 @@ function init() {
 
     passport.deserializeUser(function (id, done) {
         userRepo.getUserById(id, function (err, user) {
+            console.log(user);
+            if (err) console.error(err);
             done(err, user);
         });
     });
@@ -23,8 +25,6 @@ function init() {
         },
         function (accessToken, refreshToken, profile, done) {
             // TODO Don't Get and Update, just use Update! (findByGoogleIdAndUpdate)
-            console.log('\nGoogle Profile');
-            console.log(profile);
             userRepo.getUserByGoogleId(profile.id, function (error, user) {
                 if (error) console.error(error);
                 else if (!user) {

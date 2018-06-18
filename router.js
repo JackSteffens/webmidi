@@ -7,13 +7,12 @@ exports.setRequestUrl = function (app) {
 
     // # Routing #
     // Authentication
-    app.get('/api/user', user.getUser); // TODO Remove
-    app.post('/api/user', user.login); // TODO Remove
+    app.get('/api/user', user.getLoggedInUser);
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['https://www.googleapis.com/auth/plus.login', 'https://www.googleapis.com/auth/userinfo.profile']
     }));
     app.get('/auth/google/callback',
-        passport.authenticate('google', {failureRedirect: '/auth/google/callback/fail'}),
+        passport.authenticate('google'),
         function (req, res) {
             res.redirect('/#!/login?access_token=' + req.user.accessToken);
         });

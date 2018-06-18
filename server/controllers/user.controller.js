@@ -1,40 +1,21 @@
 var request = require('request');
-var path = require('path');
-
-/**
- *
- * @param req
- * @param res
- */
-function login(req, res) {
-    var username = req.body.user.name;
-    // TODO Google Oauth using PassportJS
-
-    if (username) {
-        req.send(req.body.user);
-    } else {
-        res.status(400);
-        res.send('No username')
-    }
-}
 
 /**
  * TODO Check if the request cookie still had a logged-in user stored
  */
-function getUser(req, res) {
-    var user = {
-        id: 'USER_ID',
-        name: 'Anonymous'
-    };
-
-    console.log('Blocked for debugging reasons');
-
-    res.status(400); // DEBUG
-    res.send(user);
+function getLoggedInUser(req, res) {
+    var user = req.user;
+    if (user) {
+        res.send(user);
+    } else {
+        res.status(401);
+        next();
+    }
 }
 
 function getProfile(req, res) {
     var accessToken = req.query.access_token;
+    console.log('getProfile session : ', req.session);
     if (accessToken) {
         request({
             url: 'https://www.googleapis.com/auth/userinfo.profile',
@@ -56,7 +37,6 @@ function getProfile(req, res) {
 }
 
 module.exports = {
-    login: login,
-    getUser: getUser,
+    getLoggedInUser: getLoggedInUser,
     getProfile: getProfile
 };

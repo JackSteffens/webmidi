@@ -1,6 +1,6 @@
 angular.module('WebMIDI').service('Authenticate',
     function ($http, $q, $timeout, $state, Api, $cookies) {
-        this.login = login;
+        this.verifyAccessToken = verifyAccessToken;
         this.logout = logout;
         this.isAuthenticated = isAuthenticated;
         this.getRole = getRole;
@@ -11,6 +11,7 @@ angular.module('WebMIDI').service('Authenticate',
         this.getAccessToken = getAccessToken;
         this.setAccessToken = setAccessToken;
         this.getAccessTokenExpiry = getAccessTokenExpiry;
+        this.restoreSession = restoreSession;
 
         var _observers = [];
         var _accessToken = undefined;
@@ -34,17 +35,15 @@ angular.module('WebMIDI').service('Authenticate',
             notifyObservers(_currentUser);
         }
 
-        function login(accessToken) {
+        function verifyAccessToken(accessToken) {
             return $q(function (resolve, reject) {
                 $http.get(Api.url.verifyAccessToken, {
                     params: {
                         access_token: accessToken
                     }
                 }).then(function (res) {
-                    setCurrentUser(res.data);
                     setAccessToken(accessToken, res.data.exp);
-                    getGoogleProfile(accessToken);
-                    resolve(_currentUser);
+                    resolve(res.data);
                 }, function (res) {
                     console.log(res);
                     reject('ERROR');
@@ -58,11 +57,13 @@ angular.module('WebMIDI').service('Authenticate',
          */
         function isAuthenticated() {
             var timestampNow = new Date().getTime();
-            var expiry = getAccessTokenExpiry();
+            var accessTokenExpiry = getAccessTokenExpiry();
             var accessToken = getAccessToken();
-            console.log('expiry : ' + expiry);
-            if (expiry && accessToken) {
-                var timestampExpiry = new Date(0).setUTCSeconds(expiry);
+            var sessionCookie = getSessionCookie();
+
+            console.log(accessTokenExpiry);
+            if (accessTokenExpiry && accessToken) {
+                var timestampExpiry = new Date(0).setUTCSeconds(accessTokenExpiry);
                 // timestampExpiry = timestampExpiry.getTime();
                 console.log('timestamp now : ' + timestampNow);
                 console.log('timestamp expiry : ' + timestampExpiry);
@@ -70,6 +71,28 @@ angular.module('WebMIDI').service('Authenticate',
             }
             console.log('No valid access token found');
             return false;
+        }
+
+        function restoreSession() {
+            return $q(function (resolve, reject) {
+                var sessionCookie = getSessionCookie();
+                var accessToken = getAccessToken();
+                console.log('Authenticate restoreSession() cookie', sessionCookie);
+                console.log('Authenticate getAccessToken() cookie', accessToken);
+                if (sessionCookie) {
+                    $http(Api.url.user)
+                        .then(function (res) {
+                            var user = res.data;
+                            resolve(user);
+                        }, function () {
+                            // setAccessToken(null, null);
+                            reject(null);
+                        });
+                } else {
+                    // setAccessToken(null, null);
+                    reject(null);
+                }
+            });
         }
 
         function getGoogleProfile(accessToken) {
@@ -125,6 +148,10 @@ angular.module('WebMIDI').service('Authenticate',
 
         function getAccessToken() {
             return $cookies.get(Api.cookie.access_token);
+        }
+
+        function getSessionCookie() {
+            return $cookies.get(Api.cookie.session);
         }
 
         function getAccessTokenExpiry() {

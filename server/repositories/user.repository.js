@@ -8,7 +8,7 @@ var User = require(path.resolve(__dirname + '/../models/user.model.js')).User;
  */
 function getUserById(userId, callback) {
     User.findOne({
-        'id': userId
+        '_id': userId
     }, function (error, user) {
         return callback(error, user);
     });

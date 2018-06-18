@@ -8,7 +8,7 @@ var Room = require(path.resolve(__dirname + '/../models/room.model.js')).Room;
  */
 function getRoom(roomId, callback) {
     Room.findOne({
-        'id': roomId
+        '_id': roomId
     }, function (error, room) {
         return callback(error, room);
     });

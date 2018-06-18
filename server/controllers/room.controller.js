@@ -7,8 +7,12 @@ var roomService = require(path.resolve(__dirname + '/../services/room.service.js
  */
 function createRoom(req, res) {
     // FIXME there's no such thing as req.user without the use of passport.js
-    var roomName = req.body.roomName;
+    var roomName = req.body.name;
+    console.log(req.body);
     var user = req.user;
+    console.log(user);
+    console.log(req.session);
+    console.log(req.cookies);
     if (roomName && user) {
         roomService.createRoom(roomName, user,
             function (error, room) {
@@ -50,14 +54,19 @@ function joinRoom(req, res) {
  * @return {string[]}
  */
 function getRooms(req, res) {
-    roomService.getRooms(function (error, rooms) {
-        if (error) {
-            res.status(500);
-            next(error)
-        } else {
-            res.send(rooms);
-        }
-    });
+    var user = req.user;
+    if (user) {
+        roomService.getRoomsForUser(user, function (error, rooms) {
+            if (error) {
+                res.status(500);
+                next(error)
+            } else {
+                res.send(rooms);
+            }
+        });
+    } else {
+        res.status(400).send('Login required');
+    }
 }
 
 function getRoom(req, res) {

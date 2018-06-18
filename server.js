@@ -4,6 +4,7 @@
 var express = require('express');
 var session = require('express-session');
 var mongoose = require('mongoose');
+var cookieParser = require('cookie-parser');
 var morgan = require('morgan');             // Console logging
 var bodyParser = require('body-parser');    // Application headers
 var http = require('http');
@@ -28,9 +29,17 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/vnd.api+json'}));
-app.use(session({secret: 'webmidi', resave: true, saveUninitialized: true}));
 
 // Set authentication strategies
+app.use(cookieParser('webmidi'));
+app.use(session({
+    secret: 'webmidi',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false
+    }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 authentication.init();

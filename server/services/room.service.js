@@ -1,3 +1,4 @@
+'use strict';
 var path = require('path');
 var roomRepo = require(path.resolve(__dirname + '/../repositories/room.repository.js'));
 var websocket = require('../utils/websocket.js');
@@ -61,7 +62,9 @@ function createRoom(roomName, user, callback) {
     var room = {
         name: roomName,
         users: [user],
-        ownerId: user.id
+        ownerId: user.id,
+        password: null,
+        passwordRequired: false
     };
 
     roomRepo.createRoom(room, function (error, newRoom) {
@@ -73,20 +76,55 @@ function createRoom(roomName, user, callback) {
 
 /**
  *
+ * @param {User} user
  * @param callback
  */
-function getRooms(callback) {
+function getRoomsForUser(user, callback) {
     roomRepo.getRooms(function (error, rooms) {
         if (error) console.error(error);
         else if (rooms) console.log('Found ' + rooms.length + ' rooms');
+        rooms = filterRooms(user, rooms);
         return callback(error, rooms);
+    });
+}
+
+/**
+ *
+ * @param {Array<Room>} rooms
+ * @param {User} user the authenticated user
+ * @param {String} user.name the authenticated user
+ */
+function filterRooms(user, rooms) {
+    rooms.forEach(function (room, key) {
+        if (user._id.equals(room.ownerId)) {
+            rooms[key].possession = 'OWNED';
+        } else if (roomContainsUser(room, user)) {
+            rooms[key].possession = 'JOINED';
+        } else {
+            rooms[key].possession = 'ACCESSIBLE';
+        }
+        rooms[key].password = null;
+    });
+    return rooms;
+}
+
+/**
+ *
+ * @param {Room} room
+ * @param {Array<User>} room.users
+ * @param {User} user the authenticated user
+ * @param {String} user._id
+ */
+function roomContainsUser(room, user) {
+    room.users.some(function (roomUser) {
+        return user._id.equals(roomUser._id);
     });
 }
 
 module.exports = {
     createRoom: createRoom,
     getRoom: getRoom,
-    getRooms: getRooms,
+    getRoomsForUser: getRoomsForUser,
     joinRoom: joinRoom,
     sendNoteToRoom: sendNoteToRoom
 };
