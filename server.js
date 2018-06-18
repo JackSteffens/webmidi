@@ -1,23 +1,27 @@
 'use strict';
 
 // Dependencies
-var express = require('express');         // Server
-var app = express();                      // Express Application
-var mongoose = require('mongoose');       // Database
-var morgan = require('morgan');           // Console logging
-var bodyParser = require('body-parser');  // Application headers
-var config = require('./config.js');      // Config params
-var router = require('./router.js');      // Controller routing
-var colors = require('colors');           // Console colors
+var express = require('express');
+var mongoose = require('mongoose');
+var morgan = require('morgan');             // Console logging
+var bodyParser = require('body-parser');    // Application headers
+var http = require('http');
+var passport = require('passport');
+
+var config = require('./config.js');
 var websocket = require('./server/utils/websocket.js'); // Global socket.io websocket
+var router = require('./router.js');
+var authentication = require('./server/services/authentication.service.js');
 
 // Configuration
+// TODO Don't use callbacks, use Promise
 mongoose.connect(config.DATABASE, function (err) {
     if (err) {
         console.log(('[!] Unable to connect to database.\n').red + (err).toString().yellow);
         return process.exit();
     }
-}); // Connect to DB
+});
+var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended': 'true'}));
@@ -28,7 +32,7 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 router.setRequestUrl(app);
 
 // Socket.io
-var server = require('http').createServer(app); // Server, required for socket.io
+var server = http.createServer(app); // Server, required for socket.io
 websocket.init(server);
 
 // Start server
