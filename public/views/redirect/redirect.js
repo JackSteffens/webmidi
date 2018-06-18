@@ -16,5 +16,5 @@ keys.forEach(function (val, index) {
     returnObj[val] = values[index];
 });
 console.log(returnObj);
-var redirectUrl = window.location.origin + '/#!/login?access_token=' + returnObj['access_token'];
-window.location.href = redirectUrl;
+var redirectUrl = window.location.origin + '/#!/login?access_token=' + returnObj['code'];
+// window.location.href = redirectUrl;

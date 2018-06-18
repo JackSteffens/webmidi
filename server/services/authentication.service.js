@@ -1,31 +1,66 @@
 var path = require('path');
-var userRepo = require(path.resolve(__dirname + '/../repositories/user.repository.js'));
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var GoogleStrategy = require('passport-google-oauth2').Strategy;
+
+var userRepo = require(path.resolve(__dirname + '/../repositories/user.repository.js'));
+var config = require(path.resolve(__dirname + '/../../config.js'));
 
 function init() {
+    passport.serializeUser(function (user, done) {
+        done(null, user.id);
+    });
 
-    /**
-     * TODO Apply strategy as described in your note book.
-     * Verify the Google access token from inside, then store in the local user model.
-     * Check authorization is then done by checking whether a user exists with said access token and
-     * whether it's still valid based on its expiry timestamp
-     */
-    passport.use(new LocalStrategy(
-        // function (email, password, done) {
-        //     userRepo.getUserByEmail(email, function (err, user) {
-        //         if (err) {
-        //             return done(err);
-        //         }
-        //         if (!user) {
-        //             return done(null, false, {message: 'Incorrect username.'});
-        //         }
-        //         if (!user.validPassword(password)) {
-        //             return done(null, false, {message: 'Incorrect password.'});
-        //         }
-        //         return done(null, user);
-        //     });
-        // }
+    passport.deserializeUser(function (id, done) {
+        userRepo.getUserById(id, function (err, user) {
+            done(err, user);
+        });
+    });
+
+    passport.use(new GoogleStrategy({
+            clientID: config.GOOGLE_CLIENT_ID,
+            clientSecret: config.GOOGLE_SECRET_KEY,
+            callbackURL: config.GOOGLE_CALLBACK_SERVER_URL
+        },
+        function (accessToken, refreshToken, profile, done) {
+            // TODO Don't Get and Update, just use Update! (findByGoogleIdAndUpdate)
+            console.log('\nGoogle Profile');
+            console.log(profile);
+            userRepo.getUserByGoogleId(profile.id, function (error, user) {
+                if (error) console.error(error);
+                else if (!user) {
+                    user = {
+                        email: 'email@test.com',
+                        name: profile.displayName,
+                        firstName: profile.name.givenName,
+                        lastName: profile.name.familyName,
+                        accessToken: accessToken,
+                        accessTokenExpiry: 0,
+                        googleId: profile.id
+                    };
+                    userRepo.createUser(user, function (error, newUser) {
+                        if (error) console.error(error);
+                        else if (newUser) console.log('New user created with Google ID : ' + newUser.googleId + ' and Id : ' + newUser.id);
+                        done(null, newUser);
+                    })
+                } else {
+                    user = {
+                        id: user.id,
+                        email: 'email@test.com',
+                        name: profile.displayName,
+                        firstName: profile.name.givenName,
+                        lastName: profile.name.familyName,
+                        accessToken: accessToken,
+                        accessTokenExpiry: 0,
+                        googleId: profile.id
+                    };
+                    userRepo.updateUser(user, function (error, newUser) {
+                        if (error) console.error(error);
+                        else if (newUser) console.log('Updated existing user with Google ID : ' + newUser.googleId + ' and Id : ' + newUser.id);
+                        done(null, newUser);
+                    });
+                }
+            })
+        }
     ));
 }
 

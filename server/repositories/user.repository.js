@@ -15,13 +15,13 @@ function getUserById(userId, callback) {
 }
 
 /**
- *
- * @param email
+ * TODO Promise instead of Callback
+ * @param googleId
  * @param callback
  */
-function getUserByEmail(email, callback) {
+function getUserByGoogleId(googleId, callback) {
     User.findOne({
-        'email': email
+        'googleId': googleId
     }, function (error, user) {
         return callback(error, user);
     });
@@ -49,7 +49,7 @@ function getUserByAccessToken(accessToken, callback) {
 function updateUser(user, callback) {
     User.findByIdAndUpdate(user.id,
         user,
-        {"new": true, "upsert": true},
+        {'new': true},
         function (error, newUser) {
             return callback(error, newUser);
         });
@@ -67,7 +67,7 @@ function createUser(user, callback) {
 module.exports = {
     createUser: createUser,
     getUserById: getUserById,
-    getUserByEmail: getUserByEmail,
     getUserByAccessToken: getUserByAccessToken,
-    updateUser: updateUser
+    updateUser: updateUser,
+    getUserByGoogleId: getUserByGoogleId
 };

@@ -1,5 +1,5 @@
 'use strict';
-angular.module('WebMIDI').run(function ($rootScope, $state, Socket, Authenticate, $http, Api) {
+angular.module('WebMIDI').run(function ($rootScope, $state, Socket, Authenticate) {
     Socket.init();
 
     $rootScope.$on('$stateChangeStart', function (event, toState) {
