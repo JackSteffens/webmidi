@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 var RoomSchema = new Schema({
     name: {type: String, required: true},
     users: {type: [UserSchema], required: true},
-    ownerId: {type: String, required: true},
+    owner: {type: UserSchema, required: true},
     password: {type: String, required: false, default: null},
     passwordRequired: {type: Boolean, required: true, default: false},
     possession: {type: String, required: false, default: null}

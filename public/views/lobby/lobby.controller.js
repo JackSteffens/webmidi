@@ -1,5 +1,6 @@
-angular.module('WebMIDI').controller('LobbyCtrl', function ($scope, $http, Api) {
+angular.module('WebMIDI').controller('LobbyCtrl', function ($scope, $http, Api, $state) {
     $scope.createRoom = createRoom;
+    $scope.joinRoom = joinRoom;
 
     function fetchRooms() {
         $http.get(Api.url.rooms)
@@ -13,6 +14,10 @@ angular.module('WebMIDI').controller('LobbyCtrl', function ($scope, $http, Api) 
             });
     }
 
+    function joinRoom(room) {
+        $state.go('room', {roomId: room._id});
+    }
+
     function createRoom() {
         var room = {
             name: $scope.room.name,
@@ -22,8 +27,7 @@ angular.module('WebMIDI').controller('LobbyCtrl', function ($scope, $http, Api) 
         $http.post(Api.url.room, room)
             .then(function (res) {
                 var newRoom = res.data;
-                console.log(newRoom);
-                $scope.room = null;
+                joinRoom(newRoom);
             }, function (res) {
                 console.error('SOME ERROR');
             })

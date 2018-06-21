@@ -27,7 +27,8 @@ exports.setRequestUrl = function (app) {
 
     // Rooms
     app.get('/api/rooms', room.getRooms);
-    app.get('/api/room', room.joinRoom);
+    app.get('/api/room', room.getRoom);
+    app.post('/api/room/join', room.joinRoom);
     app.post('/api/room', room.createRoom);
 
     // Web application index

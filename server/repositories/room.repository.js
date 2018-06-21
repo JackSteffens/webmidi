@@ -16,15 +16,17 @@ function getRoom(roomId, callback) {
 
 /**
  * TODO Promise instead of Callback
- * @param roomId
- * @param userId
- * @param callback
+ * @param {String} roomId
+ * @param {User} user
+ * @param {Function} callback
  */
-function updateRoomUsers(roomId, userId, callback) {
-    Room.findByIdAndUpdate(roomId,
-        {"$push": {"childrens": employee._id}},
-        {"new": true, "upsert": true}, function (error, room) {
-            return callback(error, room);
+function updateRoomUsers(roomId, user, callback) {
+    Room.findByIdAndUpdate(
+        roomId,
+        {"$push": {"users": user}},
+        {"new": true, "upsert": true},
+        function (error, room) {
+            callback(error, room);
         });
 }
 

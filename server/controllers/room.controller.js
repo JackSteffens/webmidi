@@ -8,11 +8,7 @@ var roomService = require(path.resolve(__dirname + '/../services/room.service.js
 function createRoom(req, res) {
     // FIXME there's no such thing as req.user without the use of passport.js
     var roomName = req.body.name;
-    console.log(req.body);
     var user = req.user;
-    console.log(user);
-    console.log(req.session);
-    console.log(req.cookies);
     if (roomName && user) {
         roomService.createRoom(roomName, user,
             function (error, room) {
@@ -34,9 +30,10 @@ function createRoom(req, res) {
  */
 function joinRoom(req, res) {
     var roomId = req.body.roomId;
+    var password = req.body.password;
     var user = req.user;
     if (roomId && user) {
-        roomService.joinRoom(roomId, user, function (error, room) {
+        roomService.joinRoom(roomId, password, user, function (error, room) {
             if (error) {
                 res.status(500);
                 next(error);
@@ -44,8 +41,10 @@ function joinRoom(req, res) {
                 res.send(room);
             }
         });
+    } else if (!user) {
+        res.status(401).send('Login Required');
     } else {
-        res.status(400).send('Invalid room');
+        res.status(400).send('No room ID given');
     }
 }
 
@@ -65,14 +64,15 @@ function getRooms(req, res) {
             }
         });
     } else {
-        res.status(400).send('Login required');
+        res.status(401).send('Login required');
     }
 }
 
 function getRoom(req, res) {
     var roomId = req.body.roomId || req.query.roomId;
-    if (roomId) {
-        roomService.getRoom(roomId, function (error, room) {
+    var user = req.user;
+    if (roomId && user) {
+        roomService.getRoom(roomId, user, function (error, room) {
             if (error) {
                 res.status(500);
                 next(error);
@@ -80,6 +80,8 @@ function getRoom(req, res) {
                 res.send(room);
             }
         });
+    } else if (!user) {
+        res.status(401).send('Login Required');
     } else {
         res.status(400).send('No room ID given');
     }

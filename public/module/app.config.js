@@ -22,5 +22,12 @@ angular.module('WebMIDI').config(function ($urlRouterProvider, $stateProvider) {
             controller: 'LobbyCtrl',
             url: '/lobby',
             authenticate: true
+        })
+        .state('room', {
+            title: 'Room',
+            templateUrl: '../views/room/room.html',
+            controller: 'RoomCtrl',
+            url: '/room/:roomId',
+            authenticate: true
         });
 });

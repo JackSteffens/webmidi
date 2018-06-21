@@ -12,6 +12,7 @@
     "angular-material": "^1.1.9",
     "angular-messages": "^1.7.0",
     "angular-sanitize": "^1.7.0",
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.18.3",
     "colors": "^1.2.5",
     "cookie-parser": "^1.4.3",

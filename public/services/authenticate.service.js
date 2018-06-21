@@ -61,12 +61,8 @@ angular.module('WebMIDI').service('Authenticate',
             var accessToken = getAccessToken();
             var sessionCookie = getSessionCookie();
 
-            console.log(accessTokenExpiry);
             if (accessTokenExpiry && accessToken) {
                 var timestampExpiry = new Date(0).setUTCSeconds(accessTokenExpiry);
-                // timestampExpiry = timestampExpiry.getTime();
-                console.log('timestamp now : ' + timestampNow);
-                console.log('timestamp expiry : ' + timestampExpiry);
                 return (timestampNow < timestampExpiry);
             }
             console.log('No valid access token found');
@@ -101,7 +97,6 @@ angular.module('WebMIDI').service('Authenticate',
                     access_token: accessToken
                 }
             }).then(function (res) {
-                console.log('Fetched google profile : ');
                 console.log(res.data);
             }, function (res) {
                 console.warn('Could not fetch Google profile using given access token');
@@ -127,8 +122,6 @@ angular.module('WebMIDI').service('Authenticate',
         }
 
         function setCurrentUser(currentUser) {
-            console.log('setting current user : ');
-            console.log(currentUser);
             _currentUser = currentUser;
             notifyObservers(_currentUser);
         }

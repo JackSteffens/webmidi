@@ -19,8 +19,6 @@ angular.module('WebMIDI').run(function ($rootScope, $state, Socket, Authenticate
      * TODO Get session from session cookie, not from the stored access token!
      */
     $rootScope.$on('$stateChangeStart', function (event, toState) {
-        console.log(toState);
-        console.log('authenticated : ' + Authenticate.isAuthenticated());
         // Check if user was already logged in (get session)
         if (!Authenticate.isAuthenticated()) {
             var accessToken = Authenticate.getAccessToken();

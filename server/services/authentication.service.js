@@ -12,7 +12,6 @@ function init() {
 
     passport.deserializeUser(function (id, done) {
         userRepo.getUserById(id, function (err, user) {
-            console.log(user);
             if (err) console.error(err);
             done(err, user);
         });
@@ -28,6 +27,7 @@ function init() {
             userRepo.getUserByGoogleId(profile.id, function (error, user) {
                 if (error) console.error(error);
                 else if (!user) {
+                    var photo = profile.photos[0] && profile.photos[0].value ? profile.photos[0].value : '';
                     user = {
                         email: 'email@test.com',
                         name: profile.displayName,
@@ -35,7 +35,8 @@ function init() {
                         lastName: profile.name.familyName,
                         accessToken: accessToken,
                         accessTokenExpiry: 0,
-                        googleId: profile.id
+                        googleId: profile.id,
+                        image: photo
                     };
                     userRepo.createUser(user, function (error, newUser) {
                         if (error) console.error(error);

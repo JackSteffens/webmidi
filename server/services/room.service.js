@@ -2,6 +2,7 @@
 var path = require('path');
 var roomRepo = require(path.resolve(__dirname + '/../repositories/room.repository.js'));
 var websocket = require('../utils/websocket.js');
+var bcrypt = require('bcrypt');
 
 /**
  *
@@ -15,39 +16,84 @@ function sendNoteToRoom(roomId, note) {
 
 /**
  *
- * @param roomId
- * @param user
+ * @param {String} roomId
+ * @param {User} user
  */
 function announceUserJoined(roomId, user) {
-    websocket.broadcastRoom(roomId, 'user', user);
+    websocket.broadcastRoom(roomId, 'users', 'User ' + user.name + ' joined the room');
 }
 
 /**
  *
- * @param roomId
- * @param user
- * @param callback
+ * @param {String} roomId
+ * @param {String} password
+ * @param {User} user
+ * @param {Function} callback
  */
-function joinRoom(roomId, user, callback) {
-    roomRepo.updateRoomUsers(roomId, user, function (error, room) {
+function joinRoom(roomId, password, user, callback) {
+    // TODO Check if password protected, and if it matches
+    roomRepo.getRoom(roomId, function (error, room) {
         if (error) console.error(error);
-        else if (room) {
-            console.log('User ' + user.name + ' has joined room ' + room.name);
-            announceUserJoined(roomId, user);
+        if (room) {
+            if (room.passwordRequired) {
+                joinProtectedRoom(room, password, user, callback);
+            } else {
+                updateRoomWithJoinedUser(room, user, callback);
+            }
+        } else {
+            callback(error, room);
         }
-        return callback(error, room);
     });
 }
 
 /**
  *
- * @param roomId
- * @param callback
+ * @param {Room} room
+ * @param {String} password
+ * @param {User} user
+ * @param {Function<Error, Room>} callback
  */
-function getRoom(roomId, callback) {
+function joinProtectedRoom(room, password, user, callback) {
+    if (room.password === password) {
+        updateRoomWithJoinedUser()
+    } else {
+        callback(new Error('Wrong password'), null);
+    }
+}
+
+/**
+ *
+ * @param {Room} room
+ * @param {User} user
+ * @param {Function<Error, Room>} callback
+ */
+function updateRoomWithJoinedUser(room, user, callback) {
+    if (roomContainsUser(room, user)) {
+        announceUserJoined(room._id, user);
+        return callback(null, room);
+    } else {
+        roomRepo.updateRoomUsers(room._id, user, function (error, room) {
+            if (error) console.error(error);
+            else if (room) {
+                console.log('User ' + user.name + ' has joined room ' + room.name);
+                announceUserJoined(room._id, user);
+            }
+            return callback(error, room);
+        });
+    }
+}
+
+/**
+ *
+ * @param {String} roomId
+ * @param {User} user
+ * @param {Function} callback
+ */
+function getRoom(roomId, user, callback) {
     roomRepo.getRoom(roomId, function (error, room) {
         if (error) console.error(error);
         else if (room) console.log('Found room : ' + room.name);
+        room = filterRooms(user, [room]);
         return callback(error, room);
     });
 }
@@ -61,8 +107,8 @@ function getRoom(roomId, callback) {
 function createRoom(roomName, user, callback) {
     var room = {
         name: roomName,
-        users: [user],
-        ownerId: user.id,
+        users: [],
+        owner: user,
         password: null,
         passwordRequired: false
     };
@@ -96,16 +142,30 @@ function getRoomsForUser(user, callback) {
  */
 function filterRooms(user, rooms) {
     rooms.forEach(function (room, key) {
-        if (user._id.equals(room.ownerId)) {
+        if (user._id.equals(room.owner._id)) {
             rooms[key].possession = 'OWNED';
         } else if (roomContainsUser(room, user)) {
             rooms[key].possession = 'JOINED';
         } else {
             rooms[key].possession = 'ACCESSIBLE';
         }
+        maskUser(room.users);
+        maskUser([room.owner]);
         rooms[key].password = null;
     });
     return rooms;
+}
+
+/**
+ *
+ * @param {Array<User>} users
+ */
+function maskUser(users) {
+    users.forEach(function (user) {
+        user.accessToken = null;
+        user.accessTokenExpiry = null;
+        user.googleId = null;
+    });
 }
 
 /**
@@ -116,7 +176,7 @@ function filterRooms(user, rooms) {
  * @param {String} user._id
  */
 function roomContainsUser(room, user) {
-    room.users.some(function (roomUser) {
+    return room.users.some(function (roomUser) {
         return user._id.equals(roomUser._id);
     });
 }

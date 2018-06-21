@@ -48,16 +48,16 @@ authentication.init();
 router.setRequestUrl(app);
 
 // Socket.io
-var server = http.createServer(app); // Server, required for socket.io
+var server = http.Server(app); // Server, required for socket.io
 websocket.init(server);
 
 // Start server
-server.listen(3000, 'localhost', function () {
+server.listen(config.SERVER_PORT, config.SERVER_IP, function () {
     console.log(
         "---------------------------------------------------------\n\n" +
         "                        Server name                        \n" +
         "                          WebMIDI                          \n" +
         "_________________________________________________________  \n"
     );
-    console.log("[i] Server started on localhost:3000");
+    console.log('[i] Server started on ' + config.SERVER_IP + ':' + config.SERVER_PORT);
 });

@@ -4,13 +4,15 @@ angular.module('WebMIDI').service('Socket', function ($http, Api) {
     this.unsubscribe = unsubscribe;
     this.init = init;
     this.getSocket = getSocket;
+    this.joinRoom = joinRoom;
+    this.sendToRoom = sendToRoom;
 
     var socket = null;
     var domain = Api.domain;
+    var room = null;
 
     function init() {
         socket = io.connect(domain);
-
         socket.on('connected', function (data) {
             console.log(data);
         });
@@ -30,8 +32,28 @@ angular.module('WebMIDI').service('Socket', function ($http, Api) {
         // ??
     }
 
+    function joinRoom(roomId) {
+        room = io.connect(Api.domain + '/' + roomId);
+        room.on('notes', function (message) {
+            console.log('A note has been played');
+            // TODO Play note on the user's keyboard which the note was received from
+            console.log(message);
+        });
+        room.on('users', function (message) {
+            console.log('A user has joined');
+            // TODO Create keyboard for user
+            console.log(message);
+        });
+    }
+
     function getSocket() {
         return socket;
+    }
+
+    function sendToRoom(channel, message) {
+        if (room) {
+            room.emit(channel, message);
+        }
     }
 
     return this;

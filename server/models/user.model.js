@@ -8,7 +8,8 @@ var UserSchema = new Schema({
     lastName: {type: String, required: true},
     accessToken: {type: String, required: true},
     accessTokenExpiry: {type: Number, required: true},
-    googleId: {type: String, required: true}
+    googleId: {type: String, required: true},
+    image: {type: String, required: true, default: ''}
 });
 
 var User = mongoose.model('user', UserSchema);
