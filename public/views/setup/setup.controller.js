@@ -1,5 +1,5 @@
 'use strict';
-angular.module('WebMIDI').controller('SetupCtrl', function ($rootScope, $scope, $state, $q, WebMidi, MockMIDIOutput, Key, Command, KeyboardModel) {
+angular.module('WebMIDI').controller('SetupCtrl', function ($rootScope, $scope, $state, $q, WebMidi, MockMIDIOutput, Key, Command, KeyboardModel, PlayerKeyboardService) {
     $scope.selectPort = selectPort;
     $scope.resetKeys = resetKeys;
     $scope.createVirtualKeyboard = createVirtualKeyboard;
@@ -64,6 +64,7 @@ angular.module('WebMIDI').controller('SetupCtrl', function ($rootScope, $scope, 
                 }
             }
             $scope.keyboardModel = new KeyboardModel($scope.midiSelectedInput, $scope.midiSelectedOutput, $scope.keys);
+            PlayerKeyboardService.setKeyboard($scope.keyboardModel);
         } else {
             throw new Error('No output to bind keyboard to');
         }

@@ -6,15 +6,13 @@ angular.module('WebMIDI').controller('LoginCtrl', function ($scope, WebMidi, $st
 
     function verifyAccessToken() {
         var accessToken = $state.params['access_token'];
-        console.log('state params : ');
-        console.log($state.params);
         if (accessToken) {
             console.log(accessToken);
             Authenticate.verifyAccessToken(accessToken).then(function () {
                 $state.go('setup');
             }, function (error) {
                 console.warn('Access token failure');
-                console.log(error);
+                console.error(error);
                 Authenticate.setAccessToken(undefined);
             });
         }

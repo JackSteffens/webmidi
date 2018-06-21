@@ -24,12 +24,16 @@
                         lock
                     </md-icon>
                     <md-icon class="material-icons"
-                             ng-show="room.possession === 'ACCESSIBLE' && !room.passwordRequired">
+                             ng-show="(room.possession === 'ACCESSIBLE' || room.possession === 'JOINED') && !room.passwordRequired">
                         lock_open
                     </md-icon>
                 </div>
             </div>
 
+            <md-button class="md-warn"
+                       ng-show="room.possession === 'OWNED'">
+                Delete
+            </md-button>
             <md-button ng-click="joinRoom(room)">
                 Join
             </md-button>

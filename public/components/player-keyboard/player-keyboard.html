@@ -1,0 +1,8 @@
+<div ng-if="show">
+    <div ng-hide="keyboard">
+        <md-button ui-sref="setup" class="md-warn">
+            Setup a keyboard
+        </md-button>
+    </div>
+    <keyboard ng-show="keyboard" keyboard-model="keyboard"></keyboard>
+</div>

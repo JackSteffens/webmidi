@@ -1,3 +1,20 @@
 <div>
-    {{room}}
+    <div layout="column">
+        <div ng-repeat="user in room.users" layout="row" class="room-user-row">
+            <div layout="column" layout-align="center center" class="room-user-row-info">
+                <img src="{{user.image}}"
+                     style="-webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;">
+                <md-button class="md-icon-button">
+                    <md-icon class="material-icons">
+                        volume_up
+                    </md-icon>
+                </md-button>
+            </div>
+            <keyboard keyboard-model="user.keyboard" flex="shrink"></keyboard>
+        </div>
+    </div>
+
+    <div>
+        <md-button class="md-raised md-warn" ng-click="sendToRoom()">TEST WEBSOCKET</md-button>
+    </div>
 </div>

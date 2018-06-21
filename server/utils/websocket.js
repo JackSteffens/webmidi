@@ -20,16 +20,25 @@ function broadcast(channel, message) {
 
 /**
  *
- * @param room
- * @param channel
- * @param message
+ * @param {String} room id
+ * @param {String} channel name
+ * @param {String} message
  */
 function broadcastRoom(room, channel, message) {
     io.in(room).emit(channel, message);
 }
 
+/**
+ *
+ * @param {String} roomId
+ */
+function getRoomSocket(roomId) {
+
+}
+
 module.exports = {
     init: init,
     broadcast: broadcast,
-    broadcastRoom: broadcastRoom
+    broadcastRoom: broadcastRoom,
+    getRoomSocket: getRoomSocket
 };

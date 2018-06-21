@@ -20,7 +20,10 @@ function sendNoteToRoom(roomId, note) {
  * @param {User} user
  */
 function announceUserJoined(roomId, user) {
-    websocket.broadcastRoom(roomId, 'users', 'User ' + user.name + ' joined the room');
+    websocket.broadcastRoom(
+        roomId,
+        'users',
+        'User ' + user.name + ' joined the room');
 }
 
 /**
@@ -68,6 +71,7 @@ function joinProtectedRoom(room, password, user, callback) {
  * @param {Function<Error, Room>} callback
  */
 function updateRoomWithJoinedUser(room, user, callback) {
+    listenToRoomWebsocket(room);
     if (roomContainsUser(room, user)) {
         announceUserJoined(room._id, user);
         return callback(null, room);
@@ -75,12 +79,22 @@ function updateRoomWithJoinedUser(room, user, callback) {
         roomRepo.updateRoomUsers(room._id, user, function (error, room) {
             if (error) console.error(error);
             else if (room) {
+                maskRoom(user, room);
                 console.log('User ' + user.name + ' has joined room ' + room.name);
                 announceUserJoined(room._id, user);
             }
             return callback(error, room);
         });
     }
+}
+
+function listenToRoomWebsocket(room) {
+    var socket = websocket.getRoomSocket(room._id);
+    var news = io
+        .of('/news')
+        .on('connection', function (socket) {
+            socket.emit('item', {news: 'item'});
+        });
 }
 
 /**
@@ -134,6 +148,19 @@ function getRoomsForUser(user, callback) {
     });
 }
 
+function maskRoom(user, room) {
+    if (user._id.equals(room.owner._id)) {
+        room.possession = 'OWNED';
+    } else if (roomContainsUser(room, user)) {
+        room.possession = 'JOINED';
+    } else {
+        room.possession = 'ACCESSIBLE';
+    }
+    maskUser(room.users);
+    maskUser([room.owner]);
+    room.password = null;
+}
+
 /**
  *
  * @param {Array<Room>} rooms
@@ -141,17 +168,8 @@ function getRoomsForUser(user, callback) {
  * @param {String} user.name the authenticated user
  */
 function filterRooms(user, rooms) {
-    rooms.forEach(function (room, key) {
-        if (user._id.equals(room.owner._id)) {
-            rooms[key].possession = 'OWNED';
-        } else if (roomContainsUser(room, user)) {
-            rooms[key].possession = 'JOINED';
-        } else {
-            rooms[key].possession = 'ACCESSIBLE';
-        }
-        maskUser(room.users);
-        maskUser([room.owner]);
-        rooms[key].password = null;
+    rooms.forEach(function (room) {
+        maskRoom(user, room);
     });
     return rooms;
 }
