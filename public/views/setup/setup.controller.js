@@ -74,7 +74,6 @@ angular.module('WebMIDI').controller('SetupCtrl', function ($rootScope, $scope, 
         return ($scope.midiSelectedOutput && $scope.midiSelectedOutput.connection && $scope.midiSelectedOutput.connection === 'open');
     }
 
-
     function sendVirtual(command) {
         console.log('sending ' + command + ' to virtual keyboard');
         virtualOutputPort.send(command);

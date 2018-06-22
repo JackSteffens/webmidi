@@ -25,15 +25,22 @@ function createRoom(req, res) {
 }
 
 /**
- *
- * @return {string}
+ * @param {String} req.body.roomId {@link Room._id}
+ * @param {String} req.body.password {@link Room.password}
+ * @param {Array<Number>} req.body.keys
+ * @param {User} req.user
+ * @return {Room|Error} Room object on success or Error on failure
  */
 function joinRoom(req, res) {
     var roomId = req.body.roomId;
     var password = req.body.password;
+    var keys = req.body.keys;
     var user = req.user;
-    if (roomId && user) {
-        roomService.joinRoom(roomId, password, user, function (error, room) {
+
+    var validKeys = validateKeys(keys);
+
+    if (roomId && user && validKeys) {
+        roomService.joinRoom(roomId, password, user, keys, function (error, room) {
             if (error) {
                 res.status(500);
                 next(error);
@@ -43,9 +50,37 @@ function joinRoom(req, res) {
         });
     } else if (!user) {
         res.status(401).send('Login Required');
-    } else {
+    } else if (!roomId) {
         res.status(400).send('No room ID given');
+    } else {
+        res.status(400).send('No keyboard configured');
     }
+}
+
+/**
+ *
+ * @param {Array<Number>} keys
+ */
+function validateKeys(keys) {
+    if (keys && keys.length > 0) {
+        var valid = true;
+        keys.forEach(function (key) {
+            if (!isValidKey(key)) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+    return false;
+}
+
+/**
+ *
+ * @param {Number} key
+ * @return {boolean}
+ */
+function isValidKey(key) {
+    return (typeof key === 'number' && key >= 0 && key <= 127);
 }
 
 /**

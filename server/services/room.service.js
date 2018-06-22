@@ -1,8 +1,9 @@
 'use strict';
 var path = require('path');
-var roomRepo = require(path.resolve(__dirname + '/../repositories/room.repository.js'));
-var websocket = require('../utils/websocket.js');
 var bcrypt = require('bcrypt');
+
+var websocket = require('../utils/websocket.js');
+var roomRepo = require(path.resolve(__dirname + '/../repositories/room.repository.js'));
 
 /**
  *
@@ -17,31 +18,38 @@ function sendNoteToRoom(roomId, note) {
 /**
  *
  * @param {String} roomId
- * @param {User} user
+ * @param {RoomUser} roomUser
  */
-function announceUserJoined(roomId, user) {
+function announceUserJoined(roomId, roomUser) {
+    // TODO roomUser must be masked! This announcement will be used to display a new player into the UI
     websocket.broadcastRoom(
         roomId,
         'users',
-        'User ' + user.name + ' joined the room');
+        'User ' + roomUser.user.name + ' joined the room');
 }
 
 /**
  *
- * @param {String} roomId
- * @param {String} password
+ * @param {String} roomId {@link Room._id}
+ * @param {String} password {@link Room.password}
  * @param {User} user
- * @param {Function} callback
+ * @param {Array<Number>} keys an array of numbers between 0 and 127
+ * @param {Function<Error, Room>} callback
  */
-function joinRoom(roomId, password, user, callback) {
+function joinRoom(roomId, password, user, keys, callback) {
     // TODO Check if password protected, and if it matches
+    var roomUserObj = {
+        user: user,
+        keys: keys
+    };
+
     roomRepo.getRoom(roomId, function (error, room) {
         if (error) console.error(error);
         if (room) {
             if (room.passwordRequired) {
-                joinProtectedRoom(room, password, user, callback);
+                joinProtectedRoom(room, password, roomUserObj, callback);
             } else {
-                updateRoomWithJoinedUser(room, user, callback);
+                updateRoomWithJoinedUser(room, roomUserObj, callback);
             }
         } else {
             callback(error, room);
@@ -51,14 +59,14 @@ function joinRoom(roomId, password, user, callback) {
 
 /**
  *
- * @param {Room} room
- * @param {String} password
- * @param {User} user
+ * @param {Room} room {@link Room}
+ * @param {String} password {@link Room.password}
+ * @param {RoomUser} roomUser
  * @param {Function<Error, Room>} callback
  */
-function joinProtectedRoom(room, password, user, callback) {
+function joinProtectedRoom(room, password, roomUser, callback) {
     if (room.password === password) {
-        updateRoomWithJoinedUser()
+        updateRoomWithJoinedUser(room, roomUser, callback);
     } else {
         callback(new Error('Wrong password'), null);
     }
@@ -67,21 +75,21 @@ function joinProtectedRoom(room, password, user, callback) {
 /**
  *
  * @param {Room} room
- * @param {User} user
+ * @param {RoomUser} roomUser
  * @param {Function<Error, Room>} callback
  */
-function updateRoomWithJoinedUser(room, user, callback) {
+function updateRoomWithJoinedUser(room, roomUser, callback) {
     listenToRoomWebsocket(room);
-    if (roomContainsUser(room, user)) {
-        announceUserJoined(room._id, user);
+    if (roomContainsUser(room, roomUser.user)) {
+        announceUserJoined(room._id, roomUser);
         return callback(null, room);
     } else {
-        roomRepo.updateRoomUsers(room._id, user, function (error, room) {
+        roomRepo.updateRoomUsers(room._id, roomUser, function (error, room) {
             if (error) console.error(error);
             else if (room) {
-                maskRoom(user, room);
-                console.log('User ' + user.name + ' has joined room ' + room.name);
-                announceUserJoined(room._id, user);
+                maskRoom(roomUser.user, room);
+                console.log('User ' + roomUser.user.name + ' has joined room ' + room.name);
+                announceUserJoined(room._id, roomUser);
             }
             return callback(error, room);
         });
@@ -89,12 +97,12 @@ function updateRoomWithJoinedUser(room, user, callback) {
 }
 
 function listenToRoomWebsocket(room) {
-    var socket = websocket.getRoomSocket(room._id);
-    var news = io
-        .of('/news')
-        .on('connection', function (socket) {
-            socket.emit('item', {news: 'item'});
-        });
+    // var socket = websocket.getRoomSocket(room._id);
+    // var news = io
+    //     .of()
+    //     .on('connection', function (socket) {
+    //         socket.emit('item', {news: 'item'});
+    //     });
 }
 
 /**
@@ -148,6 +156,11 @@ function getRoomsForUser(user, callback) {
     });
 }
 
+/**
+ *
+ * @param {User} user
+ * @param {Room} room
+ */
 function maskRoom(user, room) {
     if (user._id.equals(room.owner._id)) {
         room.possession = 'OWNED';

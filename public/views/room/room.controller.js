@@ -1,4 +1,4 @@
-angular.module('WebMIDI').controller('RoomCtrl', function ($scope, $filter, $mdToast, $state, RoomService, Socket, PlayerKeyboardService) {
+angular.module('WebMIDI').controller('RoomCtrl', function ($scope, $filter, $mdToast, $state, RoomService, Socket) {
     $scope.sendToRoom = sendToRoom;
 
     $scope.room = {};
@@ -7,29 +7,30 @@ angular.module('WebMIDI').controller('RoomCtrl', function ($scope, $filter, $mdT
         Socket.sendToRoom('notes', 'THIS IS MY NOTE');
     }
 
-    function setUserKeyboards() {
-        $scope.room.users.forEach(function (user) {
-            // TODO DUMMY KEYBOARD!!!!!!!
-            user.keyboard = PlayerKeyboardService.getKeyboard();
-        })
-    }
-
-    this.$onInit = function () {
+    function joinRoom() {
         var roomId = $state.params['roomId'];
+        var keys = RoomService.getPlayerOneKeys();
 
         if (!roomId) {
             $mdToast.showSimple('No room ID specified');
             $state.go('lobby');
+        } else if (!keys || !(keys.length > 0)) {
+            $mdToast.showSimple('No keyboard configured');
+            $state.go('lobby');
         } else {
-            RoomService.joinRoom(roomId)
+            RoomService.joinRoom(roomId, keys)
                 .then(function (room) {
                     $scope.room = room;
-                    setUserKeyboards();
+                    RoomService.setUserKeyboards($scope.room);
                     Socket.joinRoom(roomId);
                     Socket.sendToRoom('notes', 'hello');
                 }, function (error) {
                     $mdToast.showSimple(error);
                 });
         }
+    }
+
+    this.$onInit = function () {
+        joinRoom();
     }
 });

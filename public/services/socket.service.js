@@ -52,6 +52,7 @@ angular.module('WebMIDI').service('Socket', function ($http, Api) {
 
     function sendToRoom(channel, message) {
         if (room) {
+            console.log('sending a message to channel ' + channel, message);
             room.emit(channel, message);
         } else {
             console.warn('Websocket is not connected to specified room');
