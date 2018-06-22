@@ -13,8 +13,7 @@ function createRoom(req, res) {
         roomService.createRoom(roomName, user,
             function (error, room) {
                 if (error) {
-                    res.status(500);
-                    next(error);
+                    res.status(500).send(error);
                 } else {
                     res.send(room);
                 }
@@ -42,8 +41,7 @@ function joinRoom(req, res) {
     if (roomId && user && validKeys) {
         roomService.joinRoom(roomId, password, user, keys, function (error, room) {
             if (error) {
-                res.status(500);
-                next(error);
+                res.status(500).send(error);
             } else {
                 res.send(room);
             }
@@ -92,8 +90,7 @@ function getRooms(req, res) {
     if (user) {
         roomService.getRoomsForUser(user, function (error, rooms) {
             if (error) {
-                res.status(500);
-                next(error)
+                res.status(500).send(error);
             } else {
                 res.send(rooms);
             }
@@ -109,8 +106,7 @@ function getRoom(req, res) {
     if (roomId && user) {
         roomService.getRoom(roomId, user, function (error, room) {
             if (error) {
-                res.status(500);
-                next(error);
+                res.status(500).send(error);
             } else {
                 res.send(room);
             }

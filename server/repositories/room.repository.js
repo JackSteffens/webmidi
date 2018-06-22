@@ -20,11 +20,22 @@ function getRoom(roomId, callback) {
  * @param {User} user
  * @param {Function} callback
  */
-function updateRoomUsers(roomId, user, callback) {
+function pushUserToRoom(roomId, user, callback) {
     Room.findByIdAndUpdate(
         roomId,
         {"$push": {"users": user}},
         {"new": true, "upsert": true},
+        function (error, room) {
+            console.log('[I] pushUserToRoom() called');
+            callback(error, room);
+        });
+}
+
+function updateUserInRoom(roomId, roomUser, callback) {
+    Room.findOneAndUpdate(
+        {'_id': roomId, 'users.user._id': roomUser.user._id},
+        {$set: {"users.$": roomUser}},
+        {"new": true, "upsert": false},
         function (error, room) {
             callback(error, room);
         });
@@ -53,5 +64,6 @@ module.exports = {
     createRoom: createRoom,
     getRoom: getRoom,
     getRooms: getRooms,
-    updateRoomUsers: updateRoomUsers
+    pushUserToRoom: pushUserToRoom,
+    updateUserInRoom: updateUserInRoom
 };
