@@ -7,6 +7,7 @@ angular.module('WebMIDI').service('Api', function () {
     this.url = {
         room: this.baseUrl + '/room/',
         joinRoom: this.baseUrl + '/room/join',
+        leaveRoom: this.baseUrl + '/room/leave',
         rooms: this.baseUrl + '/rooms/',
         user: this.baseUrl + '/user',
         profile: this.baseUrl + '/profile',

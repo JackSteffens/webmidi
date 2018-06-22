@@ -23,13 +23,14 @@ angular.module('WebMIDI').run(function ($rootScope, $state, Socket, Authenticate
         if (!Authenticate.isAuthenticated()) {
             var accessToken = Authenticate.getAccessToken();
             if (accessToken) {
-                Authenticate.verifyAccessToken(accessToken)
-                    .then(function () {
-                        console.log('Restored session from working access token');
-                    }, function () {
-                        stateLogin(toState, event)
-
-                    });
+                $q.all([
+                    Authenticate.verifyAccessToken(accessToken),
+                    Authenticate.fetchCurrentUser()
+                ]).then(function () {
+                    console.log('Restored session');
+                }, function () {
+                    stateLogin(toState, event)
+                });
             } else {
                 stateLogin(toState, event);
             }

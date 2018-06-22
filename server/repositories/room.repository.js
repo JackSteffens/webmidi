@@ -23,10 +23,9 @@ function getRoom(roomId, callback) {
 function pushUserToRoom(roomId, user, callback) {
     Room.findByIdAndUpdate(
         roomId,
-        {"$push": {"users": user}},
-        {"new": true, "upsert": true},
+        {$push: {'users': user}},
+        {'new': true, 'upsert': true},
         function (error, room) {
-            console.log('[I] pushUserToRoom() called');
             callback(error, room);
         });
 }
@@ -34,8 +33,24 @@ function pushUserToRoom(roomId, user, callback) {
 function updateUserInRoom(roomId, roomUser, callback) {
     Room.findOneAndUpdate(
         {'_id': roomId, 'users.user._id': roomUser.user._id},
-        {$set: {"users.$": roomUser}},
-        {"new": true, "upsert": false},
+        {$set: {'users.$': roomUser}},
+        {'new': true, 'upsert': false},
+        function (error, room) {
+            callback(error, room);
+        });
+}
+
+/**
+ *
+ * @param {String} roomId
+ * @param {String} userId
+ * @param callback
+ */
+function removeUserFromRoom(roomId, userId, callback) {
+    Room.findOneAndUpdate(
+        {'_id': roomId, 'users.user._id': userId},
+        {$pull: {'users': {'user._id': userId}}},
+        {'new': true, 'upsert': false},
         function (error, room) {
             callback(error, room);
         });
@@ -65,5 +80,6 @@ module.exports = {
     getRoom: getRoom,
     getRooms: getRooms,
     pushUserToRoom: pushUserToRoom,
-    updateUserInRoom: updateUserInRoom
+    updateUserInRoom: updateUserInRoom,
+    removeUserFromRoom: removeUserFromRoom
 };

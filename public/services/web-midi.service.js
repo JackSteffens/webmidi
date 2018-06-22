@@ -80,7 +80,6 @@ angular.module('WebMIDI').service('WebMidi', function ($q, Command) {
     function getMIDIInputs() {
         return $q(function (resolve, reject) {
             requestMIDIAccess().then(function (access) {
-                console.log(access);
                 resolve(access.inputs);
             }, function (error) {
                 reject(error);

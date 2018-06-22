@@ -6,7 +6,10 @@
                       ng-click="joinRoom(room)"
                       class="md-3-line">
 
-            <img ng-src="{{room.owner.image}}" class="md-avatar" alt="{{room.users[0].name}}"/>
+            <img ng-src="{{room.owner.image}}"
+                 crossorigin="anonymous"
+                 class="md-avatar"
+                 alt="{{room.users[0].name}}"/>
 
             <div layout="row" class="md-list-item-text">
                 <div layout="column">

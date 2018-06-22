@@ -11,8 +11,11 @@ var roomRepo = require(path.resolve(__dirname + '/../repositories/room.repositor
  * @param {Object} note
  */
 function sendNoteToRoom(roomId, note) {
-    // TODO Add user authorization before broadcasting
-    websocket.broadcastRoom(roomId, 'note', note);
+    var message = {
+        key: 'note',
+        value: note
+    };
+    websocket.broadcast(roomId, message);
 }
 
 /**
@@ -21,11 +24,26 @@ function sendNoteToRoom(roomId, note) {
  * @param {RoomUser} roomUser
  */
 function announceUserJoined(roomId, roomUser) {
-    // TODO roomUser must be masked! This announcement will be used to display a new player into the UI
-    websocket.broadcastRoom(
-        roomId,
-        'users',
-        'User ' + roomUser.user.name + ' joined the room');
+    maskUser(roomUser.user);
+    var message = {
+        key: 'user',
+        value: roomUser
+    };
+    websocket.broadcast(roomId, message);
+}
+
+/**
+ *
+ * @param {String} roomId
+ * @param {User} user
+ */
+function announceUserLeft(roomId, user) {
+    maskUser(user);
+    var message = {
+        key: 'deleteuser',
+        value: user
+    };
+    websocket.broadcast(roomId, message);
 }
 
 /**
@@ -53,6 +71,27 @@ function joinRoom(roomId, password, user, keys, callback) {
             }
         } else {
             callback(error, room);
+        }
+    });
+}
+
+/**
+ *
+ * @param {String} roomId
+ * @param {User} user
+ * @param {String} user._id
+ * @param {Function<Error, Room>} callback
+ */
+function leaveRoom(roomId, user, callback) {
+    roomRepo.removeUserFromRoom(roomId, user._id, function (error, room) {
+        if (error) console.error(error);
+        if (room) {
+            announceUserLeft(roomId, user);
+            callback(error, room)
+        } else {
+            var message = 'User is not part of room : ' + roomId + '. Or the room does not exist';
+            console.error(message);
+            callback(new Error(message), null);
         }
     });
 }
@@ -89,7 +128,6 @@ function postRoomJoinUpdate(error, room, roomUser, callback) {
  * @param {Function<Error, Room>} callback
  */
 function updateRoomWithJoinedUser(room, roomUser, callback) {
-    listenToRoomWebsocket(room);
     if (roomContainsUser(room, roomUser.user)) {
         roomRepo.updateUserInRoom(room._id, roomUser, function (error, room) {
             postRoomJoinUpdate(error, room, roomUser, callback);
@@ -99,15 +137,6 @@ function updateRoomWithJoinedUser(room, roomUser, callback) {
             postRoomJoinUpdate(error, room, roomUser, callback);
         });
     }
-}
-
-function listenToRoomWebsocket(room) {
-    // var socket = websocket.getRoomSocket(room._id);
-    // var news = io
-    //     .of()
-    //     .on('connection', function (socket) {
-    //         socket.emit('item', {news: 'item'});
-    //     });
 }
 
 /**
@@ -222,5 +251,6 @@ module.exports = {
     getRoom: getRoom,
     getRoomsForUser: getRoomsForUser,
     joinRoom: joinRoom,
+    leaveRoom: leaveRoom,
     sendNoteToRoom: sendNoteToRoom
 };

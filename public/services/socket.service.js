@@ -1,11 +1,18 @@
 'use strict';
 angular.module('WebMIDI').service('Socket', function ($http, Api) {
-    this.subscribe = subscribe;
-    this.unsubscribe = unsubscribe;
     this.init = init;
+    this.send = send;
     this.getSocket = getSocket;
     this.joinRoom = joinRoom;
-    this.sendToRoom = sendToRoom;
+    this.leaveRoom = leaveRoom;
+    this.sendNoteToRoom = sendNoteToRoom;
+    this.setNotifyNotePlayed = setNotifyNotePlayed;
+    this.setNotifyUserJoined = setNotifyUserJoined;
+    this.setNotifyUserLeft = setNotifyUserLeft;
+
+    var _notifyUserJoined = null;
+    var _notifyNotePlayed = null;
+    var _notifyUserLeft = null;
 
     var socket = null;
     var domain = Api.domain;
@@ -18,45 +25,104 @@ angular.module('WebMIDI').service('Socket', function ($http, Api) {
         });
     }
 
-    function subscribe(channel, callback) {
-        socket.on(channel, function (data) {
-            callback(data);
+    /**
+     *
+     * @param {String} roomId
+     */
+    function joinRoom(roomId) {
+        socket.on(roomId, function (message) {
+            if (typeof message === 'string') {
+                try {
+                    message = JSON.parse(message);
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            handleRoomMessage(roomId, message);
         });
     }
 
     /**
-     * Unsubscribe from channel
-     * @param {String} channel
+     *
+     * @param {String} roomId
      */
-    function unsubscribe(channel) {
-        // ??
+    function leaveRoom(roomId) {
+        socket.off(roomId)
     }
 
-    function joinRoom(roomId) {
-        room = io.connect(Api.domain + '/' + roomId);
-        room.on('notes', function (message) {
-            console.log('A note has been played');
-            // TODO Play note on the user's keyboard which the note was received from
-            console.log(message);
-        });
-        room.on('users', function (message) {
-            console.log('A user has joined');
-            // TODO Create keyboard for user
-            console.log(message);
-        });
+    /**
+     *
+     * @param {String} roomId
+     * @param {Object} message
+     * @param {String} message.key
+     * @param {Object} message.value
+     */
+    function handleRoomMessage(roomId, message) {
+        switch (message.key) {
+            case 'note':
+                console.log('Someone played a note in this room', message.value);
+                if (_notifyNotePlayed) {
+                    _notifyNotePlayed(roomId, message.value);
+                }
+                break;
+            case 'user':
+                console.log('user message received');
+                if (_notifyUserJoined) {
+                    _notifyUserJoined(roomId, message.value);
+                }
+                break;
+            case 'deleteuser':
+                console.log('deleteuser message received');
+                if (_notifyUserLeft) {
+                    _notifyUserLeft(roomId, message.value);
+                }
+                break;
+            default:
+                console.warn('Unknown message', message.key);
+                break;
+        }
     }
 
     function getSocket() {
         return socket;
     }
 
-    function sendToRoom(channel, message) {
-        if (room) {
-            console.log('sending a message to channel ' + channel, message);
-            room.emit(channel, message);
-        } else {
-            console.warn('Websocket is not connected to specified room');
-        }
+    /**
+     *
+     * @param roomId
+     * @param userId
+     * @param key
+     */
+    function sendNoteToRoom(roomId, userId, key) {
+        var message = {
+            key: 'note',
+            value: {
+                owner: userId,
+                key: key
+            }
+        };
+        socket.send(roomId, message);
+    }
+
+    /**
+     * General socket.io send
+     * @param {String} event
+     * @param {*} message
+     */
+    function send(event, message) {
+        socket.send(event, message);
+    }
+
+    function setNotifyNotePlayed(fn) {
+        _notifyNotePlayed = fn;
+    }
+
+    function setNotifyUserJoined(fn) {
+        _notifyUserJoined = fn;
+    }
+
+    function setNotifyUserLeft(fn) {
+        _notifyUserLeft = fn;
     }
 
     return this;

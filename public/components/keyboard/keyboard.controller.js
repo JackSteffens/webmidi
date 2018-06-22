@@ -1,8 +1,5 @@
 'use strict';
-/**
- * @property {KeyboardModel} scope.keyboardModel
- */
-angular.module('WebMIDI').controller('KeyboardCtrl', function ($scope, WebMidi, KeyboardModel) {
+angular.module('WebMIDI').controller('KeyboardCtrl', function ($scope, Socket, RoomService, Authenticate) {
     $scope.sendToOutput = sendToOutput;
 
     $scope.velocity = 100;
@@ -10,6 +7,13 @@ angular.module('WebMIDI').controller('KeyboardCtrl', function ($scope, WebMidi, 
 
     function init() {
         initInputEventWatcher();
+    }
+
+    function sendToServer(roomId, key) {
+        var user = Authenticate.getCurrentUser();
+        if (user) {
+            Socket.sendNoteToRoom(roomId, user._id, key);
+        }
     }
 
     /**
@@ -24,6 +28,10 @@ angular.module('WebMIDI').controller('KeyboardCtrl', function ($scope, WebMidi, 
             $scope.keyboardModel.output.send([command, key.number, velocity]);
         } else {
             console.warn('No connected output port');
+        }
+        var roomId = RoomService.getRoomId();
+        if (roomId) {
+            sendToServer(roomId, key);
         }
     }
 

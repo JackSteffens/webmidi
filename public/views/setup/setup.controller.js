@@ -14,10 +14,10 @@ angular.module('WebMIDI').controller('SetupCtrl', function ($rootScope, $scope, 
     $scope.keys = [];
     $scope.keyboardModel = null;
 
-    function createVirtualKeyboard(minKey, maxKey) {
+    function createVirtualKeyboard() {
         virtualOutputPort = new MockMIDIOutput('virtual id', 'virtual name', angular.noop());
-        $scope.minKey = minKey;
-        $scope.maxKey = maxKey;
+        $scope.minKey = $scope.minKey ? $scope.minKey : 21;
+        $scope.maxKey = $scope.maxKey ? $scope.maxKey : 108;
         renderKeyboard();
     }
 

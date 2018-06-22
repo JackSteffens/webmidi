@@ -1,9 +1,10 @@
 <div>
     <div layout="column">
-        <div ng-repeat="user in room.users" layout="row" class="room-user-row">
+        <div ng-repeat="roomUser in room.users" layout="row" class="room-user-row">
             <div layout="column" layout-align="center center" class="room-user-row-info">
-                <img ng-if="user.user"
-                     src="{{user.user.image}}"
+                <img ng-src="{{roomUser.user.image}}"
+                     ng-if="roomUser.user.image"
+                     crossorigin="anonymous"
                      style="-webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;">
                 <md-button class="md-icon-button">
                     <md-icon class="material-icons">
@@ -11,11 +12,7 @@
                     </md-icon>
                 </md-button>
             </div>
-            <keyboard keyboard-model="user.keyboard" flex="shrink"></keyboard>
+            <keyboard keyboard-model="roomUser.keyboard" flex="shrink"></keyboard>
         </div>
-    </div>
-
-    <div>
-        <md-button class="md-raised md-warn" ng-click="sendToRoom()">TEST WEBSOCKET</md-button>
     </div>
 </div>

@@ -10,17 +10,25 @@
     </midi-selector>
 
     <div layout="column">
+        <span>debug info</span>
         <span>Selected output state: {{midiSelectedOutput.connection}}</span>
         <span>Selected input state: {{midiSelectedInput.connection}}</span>
-        <span> Min key : {{minKey}}</span>
-        <span> Max key : {{maxKey}}</span>
         <span> Last command: {{lastCommand}}</span>
     </div>
 
-    <!--<keyboard keyboard-model="keyboardModel"></keyboard>-->
+    <md-input-container>
+        <label>minkey</label>
+        <input ng-model="minKey" placeholder="21" type="number" min="0" max="126">
+    </md-input-container>
 
+    <md-input-container>
+        <label>maxkey</label>
+        <input ng-model="maxKey" placeholder="108" type="number" min="1" max="127">
+    </md-input-container>
+    <br>
     <md-button ng-click="resetKeys()">reset {{keys.length}} keys</md-button>
-    <md-button ng-click="createVirtualKeyboard(21, 108)">Create virtual keyboard</md-button>
+    <md-button ng-click="createVirtualKeyboard()">Create virtual keyboard</md-button>
+
 
     <md-button
             ng-disabled="

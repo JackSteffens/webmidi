@@ -15,7 +15,6 @@ angular.module('WebMIDI').controller('PlayerKeyboardCtrl', function ($scope, $st
         $scope.$watch(function () {
             return $state.current.name;
         }, function (newState) {
-            console.log($state);
             $scope.show = (newState && newState !== 'login');
         });
     }

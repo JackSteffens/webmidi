@@ -3,12 +3,14 @@
 // Dependencies
 var express = require('express');
 var session = require('express-session');
+var sharedsession = require("express-socket.io-session");
 var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
 var morgan = require('morgan');             // Console logging
 var bodyParser = require('body-parser');    // Application headers
 var http = require('http');
 var passport = require('passport');
+var io = require('socket.io');
 
 var config = require('./config.js');
 var websocket = require('./server/utils/websocket.js'); // Global socket.io websocket
@@ -49,7 +51,7 @@ router.setRequestUrl(app);
 
 // Socket.io
 var server = http.Server(app); // Server, required for socket.io
-websocket.init(server);
+websocket.init(server, session, sharedsession);
 
 // Start server
 server.listen(config.SERVER_PORT, config.SERVER_IP, function () {

@@ -7,32 +7,19 @@ angular.module('WebMIDI').service('Authenticate',
         this.registerObserver = registerObserver;
         this.setCurrentUser = setCurrentUser;
         this.getCurrentUser = getCurrentUser;
-        this.notifyObservers = notifyObservers;
+        this.fetchCurrentUser = fetchCurrentUser;
         this.getAccessToken = getAccessToken;
         this.setAccessToken = setAccessToken;
         this.getAccessTokenExpiry = getAccessTokenExpiry;
         this.restoreSession = restoreSession;
 
-        var _observers = [];
         var _accessToken = undefined;
         var _currentUser = undefined;
-        // var _currentUser = {
-        //     access_type: "online",
-        //     aud: "439345663761-vinca9jn7fsonkj8bg6pdjr39kuevdka.apps.googleusercontent.com",
-        //     azp: "439345663761-vinca9jn7fsonkj8bg6pdjr39kuevdka.apps.googleusercontent.com",
-        //     email: "jacksteffens1@gmail.com",
-        //     email_verified: "true",
-        //     exp: "1528108654",
-        //     expires_in: "3599",
-        //     scope: "https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
-        //     sub: "115025544035929044251"
-        // };
 
         function logout() {
             // Remove token from server & client cookies
             _currentUser = undefined;
             $state.go('login');
-            notifyObservers(_currentUser);
         }
 
         function verifyAccessToken(accessToken) {
@@ -59,7 +46,6 @@ angular.module('WebMIDI').service('Authenticate',
             var timestampNow = new Date().getTime();
             var accessTokenExpiry = getAccessTokenExpiry();
             var accessToken = getAccessToken();
-            var sessionCookie = getSessionCookie();
 
             if (accessTokenExpiry && accessToken) {
                 var timestampExpiry = new Date(0).setUTCSeconds(accessTokenExpiry);
@@ -71,23 +57,28 @@ angular.module('WebMIDI').service('Authenticate',
 
         function restoreSession() {
             return $q(function (resolve, reject) {
-                var sessionCookie = getSessionCookie();
-                var accessToken = getAccessToken();
-                console.log('Authenticate restoreSession() cookie', sessionCookie);
-                console.log('Authenticate getAccessToken() cookie', accessToken);
-                if (sessionCookie) {
-                    $http(Api.url.user)
-                        .then(function (res) {
-                            var user = res.data;
-                            resolve(user);
-                        }, function () {
-                            // setAccessToken(null, null);
-                            reject(null);
-                        });
-                } else {
-                    // setAccessToken(null, null);
-                    reject(null);
-                }
+                $http.get(Api.url.user)
+                    .then(function (res) {
+                        var user = res.data;
+                        setCurrentUser(user);
+                        resolve(user);
+                    }, function () {
+                        reject(null);
+                    });
+            });
+        }
+
+        function fetchCurrentUser() {
+            return $q(function (resolve, reject) {
+                $http.get(Api.url.user)
+                    .then(function (res) {
+                        var user = res.data;
+                        console.log(user);
+                        setCurrentUser(user);
+                        resolve(user);
+                    }, function (error) {
+                        reject(error)
+                    });
             });
         }
 
@@ -123,14 +114,6 @@ angular.module('WebMIDI').service('Authenticate',
 
         function setCurrentUser(currentUser) {
             _currentUser = currentUser;
-            notifyObservers(_currentUser);
-        }
-
-        // Custom watcher - call observers
-        function notifyObservers(user) {
-            angular.forEach(_observers, function (callback) {
-                callback(user);
-            });
         }
 
         function setAccessToken(token, expiryDate) {

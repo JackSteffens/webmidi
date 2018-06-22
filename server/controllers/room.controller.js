@@ -35,10 +35,15 @@ function joinRoom(req, res) {
     var password = req.body.password;
     var keys = req.body.keys;
     var user = req.user;
-
     var validKeys = validateKeys(keys);
 
-    if (roomId && user && validKeys) {
+    if (!user) {
+        res.status(401).send('Login Required');
+    } else if (!roomId) {
+        res.status(400).send('No room ID given');
+    } else if (!validKeys) {
+        res.status(400).send('No keyboard configured');
+    } else {
         roomService.joinRoom(roomId, password, user, keys, function (error, room) {
             if (error) {
                 res.status(500).send(error);
@@ -46,14 +51,34 @@ function joinRoom(req, res) {
                 res.send(room);
             }
         });
-    } else if (!user) {
+    }
+}
+
+/**
+ *
+ * @param {Object} req
+ * @param {String} req.query.roomId
+ * @param res
+ */
+function leaveRoom(req, res) {
+    var roomId = req.query.roomId;
+    var user = req.user;
+
+    if (!user) {
         res.status(401).send('Login Required');
     } else if (!roomId) {
         res.status(400).send('No room ID given');
     } else {
-        res.status(400).send('No keyboard configured');
+        roomService.leaveRoom(roomId, user, function (error, room) {
+            if (error) {
+                res.status(500).send(error);
+            } else {
+                res.status(200).send();
+            }
+        });
     }
 }
+
 
 /**
  *
@@ -121,6 +146,7 @@ function getRoom(req, res) {
 module.exports = {
     createRoom: createRoom,
     joinRoom: joinRoom,
+    leaveRoom: leaveRoom,
     getRooms: getRooms,
     getRoom: getRoom
 };
