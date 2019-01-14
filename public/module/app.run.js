@@ -1,5 +1,5 @@
 'use strict';
-angular.module('WebMIDI').run(function ($rootScope, $state, Socket, Authenticate, UserModel) {
+angular.module('WebMIDI').run(function ($rootScope, $state, Socket, Authenticate, UserModel, $q) {
     Socket.init();
 
     function setCurrentUser(user, accessTokenProfile, accessToken) {

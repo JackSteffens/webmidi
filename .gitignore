@@ -7,10 +7,10 @@ out/
 
 
 ## Node, npm & Gulp
-.node_modules/
-.node_modules/*
-.public/dist/
-.public/dist/*
+node_modules/
+node_modules/*
+public/dist/
+public/dist/*
 
 ## Misc
 .DS_Store
