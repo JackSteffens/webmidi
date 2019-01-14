@@ -1,6 +1,5 @@
 'use strict';
 var path = require('path');
-var bcrypt = require('bcrypt');
 
 var websocket = require('../utils/websocket.js');
 var roomRepo = require(path.resolve(__dirname + '/../repositories/room.repository.js'));
