@@ -14,3 +14,6 @@ public/dist/*
 
 ## Misc
 .DS_Store
+
+# Node environment variables
+.env

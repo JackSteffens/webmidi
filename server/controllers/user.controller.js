@@ -5,12 +5,10 @@ var request = require('request');
  */
 function getLoggedInUser(req, res) {
     var user = req.user;
-    if (user) {
-        res.send(user);
-    } else {
+    if (!user) {
         res.status(401);
-        next();
     }
+    res.send(user);
 }
 
 function getProfile(req, res) {
