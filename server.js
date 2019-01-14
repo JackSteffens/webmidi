@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');    // Application headers
 var http = require('http');
 var passport = require('passport');
 var io = require('socket.io');
+var colors = require('colors');
 
 var config = require('./config.js');
 var websocket = require('./server/utils/websocket.js'); // Global socket.io websocket
