@@ -68,7 +68,8 @@ const config = {
     GOOGLE_CALLBACK_SERVER_URL: `http://${convictConfig.get('SERVER.IP')}:${convictConfig.get('SERVER.PORT')}/auth/google/callback`,
     // SERVER
     SERVER_IP: convictConfig.get('SERVER.IP'),
-    SERVER_PORT: convictConfig.get('SERVER.PORT')
+    SERVER_PORT: convictConfig.get('SERVER.PORT'),
+    ENVIRONMENT: convictConfig.get('ENV')
 };
 Object.freeze(config);
 module.exports = config;

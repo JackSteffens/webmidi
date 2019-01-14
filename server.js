@@ -62,5 +62,5 @@ server.listen(config.SERVER_PORT, config.SERVER_IP, function () {
         "                          WebMIDI                          \n" +
         "_________________________________________________________  \n"
     );
-    console.log('[i] Server started on ' + config.SERVER_IP + ':' + config.SERVER_PORT);
+    console.log(`[i] Server started on ${config.SERVER_IP}:${config.SERVER_PORT} using ${config.ENVIRONMENT} environment`);
 });
