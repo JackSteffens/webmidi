@@ -55,6 +55,18 @@ const convictConfig = convict({
             arg: 'googleOAuthSecretKey',
             env: 'GOOGLE_OAUTH_SECRET_KEY'
         },
+        CALLBACK_URL: {
+            format: String,
+            default: 'http://localhost:3000/api/oauth2',
+            arg: 'googleOAuthCallbackUrl',
+            env: 'GOOGLE_OAUTH_CALLBACK_URL'
+        },
+        CALLBACK_SERVER_URL: {
+            format: String,
+            default: 'http://localhost:3000/auth/google/callback',
+            arg: 'googleOAuthCallbackServerUrl',
+            env: 'GOOGLE_OAUTH_CALLBACK_SERVER_URL'
+        }
     }
 });
 
@@ -64,8 +76,8 @@ const config = {
     // Google OAuth
     GOOGLE_CLIENT_ID: convictConfig.get('GOOGLE_OAUTH.CLIENT_ID'),
     GOOGLE_SECRET_KEY: convictConfig.get('GOOGLE_OAUTH.SECRET_KEY'),
-    GOOGLE_CALLBACK_URL: `http://${convictConfig.get('SERVER.IP')}:${convictConfig.get('SERVER.PORT')}/api/oauth2`,
-    GOOGLE_CALLBACK_SERVER_URL: `http://${convictConfig.get('SERVER.IP')}:${convictConfig.get('SERVER.PORT')}/auth/google/callback`,
+    GOOGLE_CALLBACK_URL: convictConfig.get('GOOGLE_OAUTH.CALLBACK_URL'),
+    GOOGLE_CALLBACK_SERVER_URL: convictConfig.get('GOOGLE_OAUTH.CALLBACK_SERVER_URL'),
     // SERVER
     SERVER_IP: convictConfig.get('SERVER.IP'),
     SERVER_PORT: convictConfig.get('SERVER.PORT'),
