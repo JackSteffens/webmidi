@@ -20,7 +20,11 @@ var authentication = require('./server/services/authentication.service.js');
 
 // Configuration
 // TODO Don't use callbacks, use Promise
-mongoose.connect(config.DATABASE, function (err) {
+mongoose.connect(config.DATABASE, {
+    user: config.DATABASE_USERNAME,
+    pass: config.DATABASE_PASSWORD,
+    dbName:config.DATABASE_NAME
+}, function (err) {
     if (err) {
         console.log(('[!] Unable to connect to database.\n').red + (err).toString().yellow);
         return process.exit();

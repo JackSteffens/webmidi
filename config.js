@@ -40,6 +40,18 @@ const convictConfig = convict({
             default: 'webmidi',
             arg: 'databaseName',
             env: 'DATABASE_NAME'
+        },
+        USERNAME: {
+            format: String,
+            default: 'root',
+            arg: 'databaseUsername',
+            env: 'DATABASE_USERNAME'
+        },
+        PASSWORD: {
+            format: String,
+            default: 'root',
+            arg: 'databasePassword',
+            env: 'DATABASE_PASSWORD'
         }
     },
     GOOGLE_OAUTH: {
@@ -72,7 +84,10 @@ const convictConfig = convict({
 
 const config = {
     // MongoDB
-    DATABASE: `mongodb://${convictConfig.get('DATABASE.IP')}:${convictConfig.get('DATABASE.PORT')}/${convictConfig.get('DATABASE.NAME')}`,
+    DATABASE: `mongodb://${convictConfig.get('DATABASE.IP')}:${convictConfig.get('DATABASE.PORT')}/${convictConfig.get('DATABASE.NAME')}?authSource=admin`,
+    DATABASE_USERNAME: convictConfig.get('DATABASE.USERNAME'),
+    DATABASE_PASSWORD: convictConfig.get('DATABASE.PASSWORD'),
+    DATABASE_NAME: convictConfig.get('DATABASE.NAME'),
     // Google OAuth
     GOOGLE_CLIENT_ID: convictConfig.get('GOOGLE_OAUTH.CLIENT_ID'),
     GOOGLE_SECRET_KEY: convictConfig.get('GOOGLE_OAUTH.SECRET_KEY'),
