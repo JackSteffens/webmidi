@@ -1,0 +1,17 @@
+<!--layout="column" -->
+<div class="keyboard-container">
+  <!--style="overflow-x: auto"-->
+  <div class="keys-scrollbar">
+    <!--layout="row"-->
+    <div class="keys-wrapper">
+      <div class="key"
+           *ngFor="let key of keyboardModel.keys"
+           [ngClass]="[key.sharp ? 'sharp' : 'regular', key.active ? 'active' : 'non-active']"
+           (mousedown)="sendToOutput(144, key, velocity)"
+           (mouseleave)="key.active ? sendToOutput(144, key, 0) : undefined"
+           (mouseup)="sendToOutput(144, key, 0)">
+        <span>{{key.note}}</span>
+      </div>
+    </div>
+  </div>
+</div>

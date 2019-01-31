@@ -3,11 +3,15 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
+import { KeyboardComponent } from '../components/keyboard/keyboard.component';
+import { MidiSelectorComponent } from '../components/midi-selector/midi-selector.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    KeyboardComponent,
+    MidiSelectorComponent
   ],
   imports: [
     BrowserModule
