@@ -1,3 +1,31 @@
-<p>
-  midi-selector works!
-</p>
+<form name="midiPortSelector">
+  <div class="list-wrappers">
+    <fieldset id="inputs">
+      <legend>Inputs:</legend>
+      <div class="inputs-column">
+        <label *ngFor="let input of availableInputs">
+          <input type="radio"
+                 name="inputs"
+                 [value]="input"
+                 [(ngModel)]="selectedInput"
+                 (change)="onInputSelected()">
+          {{input.name}}
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset id="outputs">
+      <legend>Outputs</legend>
+      <div class="outputs-column">
+        <label *ngFor="let output of availableOutputs">
+          <input type="radio"
+                 name="outputs"
+                 [value]="output"
+                 [(ngModel)]="selectedOutput"
+                 (change)="onOutputSelected()">
+          {{output.name}}
+        </label>
+      </div>
+    </fieldset>
+  </div>
+</form>

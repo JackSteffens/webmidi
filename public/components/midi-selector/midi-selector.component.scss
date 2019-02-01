@@ -1,0 +1,9 @@
+div.list-wrappers {
+  display: flex;
+  flex-direction: row;
+
+  div.inputs-column, div.outputs-column {
+    display: flex;
+    flex-direction: column;
+  }
+}

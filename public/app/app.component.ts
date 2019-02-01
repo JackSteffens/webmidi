@@ -5,6 +5,8 @@ import { Key } from '../models/key';
 import MIDIInputMap = WebMidi.MIDIInputMap;
 import MIDIOutputMap = WebMidi.MIDIOutputMap;
 import { CommandService } from '../services/command.service';
+import MIDIInput = WebMidi.MIDIInput;
+import MIDIOutput = WebMidi.MIDIOutput;
 
 @Component({
   selector: 'app-root',
@@ -14,14 +16,22 @@ import { CommandService } from '../services/command.service';
 export class AppComponent implements OnInit {
   keyboardModel: KeyboardConfig;
 
+
   constructor(private commandService: CommandService) {
+  }
+
+  public onInputSelectedFn(input: MIDIInput) {
+    console.log('INPUT SELECTED, CALLBACK FN : ', input);
+  }
+
+  public onOutputSelectedFn(output: MIDIOutput) {
+    console.log('OUTPUT SELECTED, CALLBACK FN : ', output);
   }
 
   ngOnInit(): void {
     navigator.requestMIDIAccess().then((access: MIDIAccess) => {
       let inputs: MIDIInputMap = access.inputs;
       let outputs: MIDIOutputMap = access.outputs;
-      console.log('outputs : ', outputs.values());
       if ((inputs.size > 0) && (outputs.size > 0)) {
 
         let inputKey = inputs.keys().next().value;

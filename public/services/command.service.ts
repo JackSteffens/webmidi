@@ -14,7 +14,6 @@ export class CommandService {
     this.maxNote = 127;
     this.baseNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     this.initNotes();
-    console.log('NOTES  :', CommandService.notes);
   }
 
   public static getNote(noteIndex: number): string {

@@ -1,2 +1,4 @@
 <div>Testing environment for components</div>
+<app-midi-selector [inputPortSelectedFn]="onInputSelectedFn"
+                   [outputPortSelectedFn]="onOutputSelectedFn"></app-midi-selector>
 <app-keyboard *ngIf="keyboardModel" [keyboardModel]="keyboardModel"></app-keyboard>

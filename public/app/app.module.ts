@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { KeyboardComponent } from '../components/keyboard/keyboard.component';
 import { MidiSelectorComponent } from '../components/midi-selector/midi-selector.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,9 +15,11 @@ import { MidiSelectorComponent } from '../components/midi-selector/midi-selector
     MidiSelectorComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
