@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { KeyboardConfig } from '../models/keyboard-config';
-import MIDIAccess = WebMidi.MIDIAccess;
-import { Key } from '../models/key';
-import MIDIInputMap = WebMidi.MIDIInputMap;
-import MIDIOutputMap = WebMidi.MIDIOutputMap;
 import { CommandService } from '../services/command.service';
-import MIDIInput = WebMidi.MIDIInput;
-import MIDIOutput = WebMidi.MIDIOutput;
+import { Key } from '../models/key';
+import MIDIAccess = WebMidi.MIDIAccess;
+import MIDIOutputMap = WebMidi.MIDIOutputMap;
+import MIDIInputMap = WebMidi.MIDIInputMap;
 
 @Component({
   selector: 'app-root',
@@ -16,16 +14,12 @@ import MIDIOutput = WebMidi.MIDIOutput;
 export class AppComponent implements OnInit {
   keyboardModel: KeyboardConfig;
 
-
+  /*
+  CommandService requires to be injected on startup, because OnInit() needs to be called.
+  Key.class needs the data that's being generated in CommandService.ngOnInit(), but the Key class cannot
+  inject the service itself. Need to find a way how to circumvent this.
+   */
   constructor(private commandService: CommandService) {
-  }
-
-  public onInputSelectedFn(input: MIDIInput) {
-    console.log('INPUT SELECTED, CALLBACK FN : ', input);
-  }
-
-  public onOutputSelectedFn(output: MIDIOutput) {
-    console.log('OUTPUT SELECTED, CALLBACK FN : ', output);
   }
 
   ngOnInit(): void {

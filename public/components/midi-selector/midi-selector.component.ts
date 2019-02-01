@@ -4,6 +4,7 @@ import MIDIOutput = WebMidi.MIDIOutput;
 import MIDIInputMap = WebMidi.MIDIInputMap;
 import MIDIOutputMap = WebMidi.MIDIOutputMap;
 import { MidiService } from '../../services/midi.service';
+import MIDIPort = WebMidi.MIDIPort;
 
 @Component({
   selector: 'app-midi-selector',
@@ -25,29 +26,61 @@ export class MidiSelectorComponent implements OnInit {
 
   public onInputSelected(): void {
     this.midiService.setSelectedInput(this.selectedInput)
-      .then((input) => {
-        if (typeof this.inputPortSelectedFn === 'function') {
-          this.inputPortSelectedFn(input);
-        }
-      });
+        .then((input) => {
+          if (typeof this.inputPortSelectedFn === 'function') {
+            this.inputPortSelectedFn(input);
+          }
+        });
   }
 
   public onOutputSelected(): void {
     this.midiService.setSelectedOutput(this.selectedOutput)
-      .then((output) => {
-        if (typeof this.outputPortSelectedFn === 'function') {
-          this.outputPortSelectedFn(output);
-        }
+        .then((output) => {
+          if (typeof this.outputPortSelectedFn === 'function') {
+            this.outputPortSelectedFn(output);
+          }
+        });
+  }
+
+  initInputs() {
+    this.midiService.getMIDIInputs()
+        .then((inputs: MIDIInputMap) => {
+          this.availableInputs = Array.from(inputs.values());
+        })
+        .then(() => {
+          this.selectPreviousInput();
+        });
+  }
+
+  selectPreviousInput(): void {
+    this.selectedInput = this.getPreviousPort(MidiService.selectedInput, this.availableInputs);
+  }
+
+  selectPreviousOutput(): void {
+    this.selectedOutput = this.getPreviousPort(MidiService.selectedOutput, this.availableOutputs);
+  }
+
+  getPreviousPort(previousPort: MIDIPort, portList: Array<MIDIPort>): any {
+    if (previousPort && portList.length > 0) {
+      return portList.find((port) => {
+        return port.id === previousPort.id;
       });
+    }
+    return null;
+  }
+
+  initOutputs() {
+    this.midiService.getMIDIOutputs()
+        .then((outputs: MIDIOutputMap) => {
+          this.availableOutputs = Array.from(outputs.values());
+        })
+        .then(() => {
+          this.selectPreviousOutput();
+        });
   }
 
   ngOnInit() {
-    this.midiService.getMIDIInputs().then((inputs: MIDIInputMap) => {
-      this.availableInputs = Array.from(inputs.values());
-    });
-    this.midiService.getMIDIOutputs().then((outputs: MIDIOutputMap) => {
-      this.availableOutputs = Array.from(outputs.values());
-    });
+    this.initInputs();
+    this.initOutputs();
   }
-
 }
