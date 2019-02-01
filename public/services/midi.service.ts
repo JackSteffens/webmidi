@@ -5,6 +5,7 @@ import MIDIOutputMap = WebMidi.MIDIOutputMap;
 import MIDIInput = WebMidi.MIDIInput;
 import MIDIOutput = WebMidi.MIDIOutput;
 import MIDIPort = WebMidi.MIDIPort;
+import { BehaviorSubject, Observable } from 'rxjs';
 
 
 @Injectable({
@@ -13,9 +14,19 @@ import MIDIPort = WebMidi.MIDIPort;
 export class MidiService {
   public static selectedInput: MIDIInput;
   public static selectedOutput: MIDIOutput;
+  private selectedInputBehaviourSubject: BehaviorSubject<MIDIInput> = new BehaviorSubject<MIDIInput>(MidiService.selectedInput);
+  private selectedOutputBehaviourSubject: BehaviorSubject<MIDIOutput> = new BehaviorSubject<MIDIOutput>(MidiService.selectedOutput);
 
   public requestMidiAccess(): Promise<MIDIAccess> {
     return navigator.requestMIDIAccess();
+  }
+
+  public getSelectedInputObservable(): Observable<MIDIInput> {
+    return this.selectedInputBehaviourSubject.asObservable();
+  }
+
+  public getSelectedOutputObservable(): Observable<MIDIOutput> {
+    return this.selectedOutputBehaviourSubject.asObservable();
   }
 
   public getMIDIInputs(): Promise<MIDIInputMap> {
@@ -48,22 +59,22 @@ export class MidiService {
 
   closeOldInputAndOpenNewInput(input: MIDIInput) {
     return MidiService.closeMIDIPort(MidiService.selectedInput)
-      .then(() => {
-        return input.open();
-      }, (reason) => {
-        console.error(reason);
-        return MidiService.selectedInput; // Continue with the currently open connection
-      });
+                      .then(() => {
+                        return input.open();
+                      }, (reason) => {
+                        console.error(reason);
+                        return MidiService.selectedInput; // Continue with the currently open connection
+                      });
   }
 
   closeOldOutputAndOpenNewOutput(output: MIDIOutput) {
     return MidiService.closeMIDIPort(MidiService.selectedOutput)
-      .then(() => {
-        return output.open();
-      }, (reason) => {
-        console.error(reason);
-        return MidiService.selectedOutput;
-      });
+                      .then(() => {
+                        return output.open();
+                      }, (reason) => {
+                        console.error(reason);
+                        return MidiService.selectedOutput;
+                      });
   }
 
   public setSelectedInput(input: MIDIInput): Promise<MIDIInput> {
@@ -77,6 +88,7 @@ export class MidiService {
 
     return openPortPromise.then((newInput: MIDIInput) => {
       MidiService.selectedInput = newInput;
+      this.selectedInputBehaviourSubject.next(newInput);
       return MidiService.selectedInput;
     });
   }
@@ -92,6 +104,7 @@ export class MidiService {
 
     return openPortPromise.then((newOutput: MIDIOutput) => {
       MidiService.selectedOutput = newOutput;
+      this.selectedOutputBehaviourSubject.next(newOutput);
       return MidiService.selectedOutput;
     });
   }

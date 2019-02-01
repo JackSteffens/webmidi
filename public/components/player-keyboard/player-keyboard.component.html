@@ -1,0 +1,5 @@
+<div>
+  <span>input : {{(keyboardModel && keyboardModel.input) ? keyboardModel.input.name : 'none'}} | </span>
+  <span>output : {{(keyboardModel && keyboardModel.output) ? keyboardModel.output.name : 'none'}}</span>
+  <app-keyboard *ngIf="keyboardModel" [keyboardModel]="keyboardModel"></app-keyboard>
+</div>

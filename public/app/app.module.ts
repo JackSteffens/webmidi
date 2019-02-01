@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { SetupPageComponent } from '../components/setup-page/setup-page.component';
 import { RouterModule, Routes } from '@angular/router';
 import { SplashPageComponent } from '../components/splash-page/splash-page.component';
+import { PlayerKeyboardComponent } from '../components/player-keyboard/player-keyboard.component';
+import { KeyboardDesignNoneComponent } from '../components/keyboard-design-none/keyboard-design-none.component';
 
 // TODO Move to separate "routing" module
 let routes: Routes = [
@@ -21,7 +23,9 @@ let routes: Routes = [
     KeyboardComponent,
     MidiSelectorComponent,
     SetupPageComponent,
-    SplashPageComponent
+    SplashPageComponent,
+    PlayerKeyboardComponent,
+    KeyboardDesignNoneComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
