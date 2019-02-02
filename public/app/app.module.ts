@@ -9,6 +9,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SplashPageComponent } from '../components/splash-page/splash-page.component';
 import { PlayerKeyboardComponent } from '../components/player-keyboard/player-keyboard.component';
 import { KeyboardDesignNoneComponent } from '../components/keyboard-design-none/keyboard-design-none.component';
+import { KeyboardDesignDirective } from '../directives/keyboard-design.directive';
 
 // TODO Move to separate "routing" module
 let routes: Routes = [
@@ -25,13 +26,15 @@ let routes: Routes = [
     SetupPageComponent,
     SplashPageComponent,
     PlayerKeyboardComponent,
-    KeyboardDesignNoneComponent
+    KeyboardDesignNoneComponent,
+    KeyboardDesignDirective
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     FormsModule
   ],
+  entryComponents: [KeyboardDesignNoneComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

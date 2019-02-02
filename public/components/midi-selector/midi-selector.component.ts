@@ -5,6 +5,7 @@ import MIDIInputMap = WebMidi.MIDIInputMap;
 import MIDIOutputMap = WebMidi.MIDIOutputMap;
 import { MidiService } from '../../services/midi.service';
 import MIDIPort = WebMidi.MIDIPort;
+import { PlayerKeyboardService } from '../../services/player-keyboard.service';
 
 @Component({
   selector: 'app-midi-selector',
@@ -21,43 +22,39 @@ export class MidiSelectorComponent implements OnInit {
   public availableInputs: Array<MIDIInput>;
   public availableOutputs: Array<MIDIOutput>;
 
-  constructor(private midiService: MidiService) {
+  constructor(private playerKeyboardService: PlayerKeyboardService) {
   }
 
   public onInputSelected(): void {
-    this.midiService.setSelectedInput(this.selectedInput)
-        .then((input) => {
-          if (typeof this.inputPortSelectedFn === 'function') {
-            this.inputPortSelectedFn(input);
-          }
-        });
+    this.playerKeyboardService.input = this.selectedInput;
+    if (typeof this.inputPortSelectedFn === 'function') {
+      this.inputPortSelectedFn(this.selectedInput);
+    }
   }
 
   public onOutputSelected(): void {
-    this.midiService.setSelectedOutput(this.selectedOutput)
-        .then((output) => {
-          if (typeof this.outputPortSelectedFn === 'function') {
-            this.outputPortSelectedFn(output);
-          }
-        });
+    this.playerKeyboardService.output = this.selectedOutput;
+    if (typeof this.outputPortSelectedFn === 'function') {
+      this.outputPortSelectedFn(this.selectedOutput);
+    }
   }
 
   initInputs() {
-    this.midiService.getMIDIInputs()
-        .then((inputs: MIDIInputMap) => {
-          this.availableInputs = Array.from(inputs.values());
-        })
-        .then(() => {
-          this.selectPreviousInput();
-        });
+    MidiService.getMIDIInputs()
+               .then((inputs: MIDIInputMap) => {
+                 this.availableInputs = Array.from(inputs.values());
+               })
+               .then(() => {
+                 this.selectPreviousInput();
+               });
   }
 
   selectPreviousInput(): void {
-    this.selectedInput = this.getPreviousPort(MidiService.selectedInput, this.availableInputs);
+    this.selectedInput = this.getPreviousPort(this.playerKeyboardService.input, this.availableInputs);
   }
 
   selectPreviousOutput(): void {
-    this.selectedOutput = this.getPreviousPort(MidiService.selectedOutput, this.availableOutputs);
+    this.selectedOutput = this.getPreviousPort(this.playerKeyboardService.output, this.availableOutputs);
   }
 
   getPreviousPort(previousPort: MIDIPort, portList: Array<MIDIPort>): any {
@@ -70,13 +67,13 @@ export class MidiSelectorComponent implements OnInit {
   }
 
   initOutputs() {
-    this.midiService.getMIDIOutputs()
-        .then((outputs: MIDIOutputMap) => {
-          this.availableOutputs = Array.from(outputs.values());
-        })
-        .then(() => {
-          this.selectPreviousOutput();
-        });
+    MidiService.getMIDIOutputs()
+               .then((outputs: MIDIOutputMap) => {
+                 this.availableOutputs = Array.from(outputs.values());
+               })
+               .then(() => {
+                 this.selectPreviousOutput();
+               });
   }
 
   ngOnInit() {

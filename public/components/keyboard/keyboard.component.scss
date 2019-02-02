@@ -2,7 +2,6 @@ div.keyboard-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  outline: 1px solid red;
   align-items: flex-start;
   align-content: stretch;
 
@@ -64,13 +63,10 @@ div.keyboard-container {
           //  Nothing
         }
 
-
         span {
           bottom: 0;
         }
       }
-
-
     }
   }
 }

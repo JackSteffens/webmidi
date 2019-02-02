@@ -16,19 +16,19 @@ export class Key {
     if (typeof note === 'string') {
       this.note = note;
       this.number = this.number ? this.number : CommandService.getNumber(note);
-      this.octave = Key.getOctave(note);
-      this.sharp = Key.isSharp(note);
+      this.octave = this.getOctave(note);
+      this.sharp = this.isSharp(note);
       this.active = false;
     } else {
       throw new TypeError('No note given');
     }
   }
 
-  static isSharp(note): boolean {
+  private isSharp(note): boolean {
     return note.includes('#');
   }
 
-  static getOctave(note): number {
+  private getOctave(note): number {
     let octave = Number(note.match(new RegExp('\\d', 'g'))[0]);
     return octave ? octave : 0;
   }

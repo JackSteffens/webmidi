@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MidiService } from '../../services/midi.service';
 
 @Component({
   selector: 'app-splash-page',
@@ -10,7 +9,7 @@ import { MidiService } from '../../services/midi.service';
 export class SplashPageComponent implements OnInit {
   progressMessage: string;
 
-  constructor(private router: Router, private midiService: MidiService) {
+  constructor(private router: Router) {
   }
 
   initSession(): Promise<any> {
@@ -86,21 +85,6 @@ export class SplashPageComponent implements OnInit {
         .then(() => this.done(), (reason) => {
           console.log('Loading configuration failed because : ', reason);
         });
-
-
-    // Promise.all([this.initSession(), this.initPortConfiguration(), this.initKeyboard()])
-    //        .then(() => {
-    //
-    //          this.progressMessage = 'DONE';
-    //          // If all succeeds, goto Lobby
-    //          setTimeout(() => {
-    //            this.router.navigate(['/setup']);
-    //          }, 1000);
-    //        }, (reason: string) => {
-    //          console.error(reason);
-    //        });
-
-
   }
 
 }

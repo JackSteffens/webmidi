@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular/core';
 import { KeyboardConfig } from '../../models/keyboard-config';
-import { MidiService } from '../../services/midi.service';
-import { Key } from '../../models/key';
-import MIDIInputMap = WebMidi.MIDIInputMap;
-import MIDIOutputMap = WebMidi.MIDIOutputMap;
-import MIDIAccess = WebMidi.MIDIAccess;
+import { KeyboardDesignDirective } from '../../directives/keyboard-design.directive';
+import { KeyboardDesign } from '../../models/keyboard-design';
+import { KeyboardDesignInterface } from '../../models/keyboard-design-interface';
+import { PlayerKeyboardService } from '../../services/player-keyboard.service';
 
 @Component({
   selector: 'app-player-keyboard',
@@ -13,33 +12,45 @@ import MIDIAccess = WebMidi.MIDIAccess;
 })
 export class PlayerKeyboardComponent implements OnInit {
   keyboardModel: KeyboardConfig;
+  @ViewChild(KeyboardDesignDirective)
+  keyboardDesignHost: KeyboardDesignDirective;
 
-  constructor(private midiService: MidiService) {
+  constructor(private playerKeyboardService: PlayerKeyboardService, private componentFactoryResolver: ComponentFactoryResolver) {
   }
 
   listenOnPortChanges(): void {
-    this.midiService.getSelectedInputObservable().subscribe((input) => {
-      console.log('OBSERVER DETECTED INPUT CHANGE : ', input);
+    this.playerKeyboardService.inputObservable.subscribe((input) => {
       if (this.keyboardModel) {
-        this.keyboardModel.input = MidiService.selectedInput;
+        this.keyboardModel.input = input;
       }
     });
 
-    this.midiService.getSelectedOutputObservable().subscribe((output) => {
-      console.log('OBSERVER DETECTED OUTPUT CHANGE', output);
+    this.playerKeyboardService.outputObservable.subscribe((output) => {
       if (this.keyboardModel) {
         this.keyboardModel.output = output;
       }
     });
   }
 
+  listenOnKeyboardDesignChanges(): void {
+    this.playerKeyboardService.playerKeyboardDesignObservable.subscribe((keyboardDesign: KeyboardDesign) => {
+      if (keyboardDesign && keyboardDesign.component) {
+        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(keyboardDesign.component);
+
+        let viewContainerRef = this.keyboardDesignHost.viewContainerRef;
+        viewContainerRef.clear();
+
+        let componentRef = viewContainerRef.createComponent(componentFactory);
+        (<KeyboardDesignInterface>componentRef.instance).keyboardConfig = keyboardDesign.keyboardConfig;
+      } else {
+        console.debug('Trying to set a KeyboardDesign for PlayerKeyboardComponent but no keyboard design was set in the PlayerKeyBoardService');
+      }
+    });
+  }
+
   ngOnInit() {
-    let keys: Array<Key> = [];
-    for (let index = 21; index < 108; index++) {
-      keys.push(new Key(index));
-    }
-    this.keyboardModel = new KeyboardConfig(null, null, keys);
     this.listenOnPortChanges();
+    this.listenOnKeyboardDesignChanges();
   }
 
 }

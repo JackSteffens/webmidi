@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import MIDIInput = WebMidi.MIDIInput;
 import MIDIOutput = WebMidi.MIDIOutput;
-import { MidiService } from '../../services/midi.service';
+import { PlayerKeyboardService } from '../../services/player-keyboard.service';
+import { KeyboardDesign } from '../../models/keyboard-design';
+import { KeyboardDesignNoneComponent } from '../keyboard-design-none/keyboard-design-none.component';
 
 @Component({
   selector: 'app-setup-page',
@@ -9,19 +11,24 @@ import { MidiService } from '../../services/midi.service';
   styleUrls: ['./setup-page.component.scss']
 })
 export class SetupPageComponent implements OnInit {
+  public skeletonDesign;
 
   public onInputSelectedFn(input: MIDIInput) {
-    console.log('INPUT SELECTED, CALLBACK FN : ', MidiService.selectedInput);
+    console.log('INPUT SELECTED, CALLBACK FN : ', input);
   }
 
   public onOutputSelectedFn(output: MIDIOutput) {
-    console.log('OUTPUT SELECTED, CALLBACK FN : ', MidiService.selectedOutput);
+    console.log('OUTPUT SELECTED, CALLBACK FN : ', output);
   }
 
-  constructor() {
+  public setPlayerKeyboardDesign(keyboardDesignComponent: KeyboardDesign): void {
+    this.playerKeyboardService.playerKeyboardDesign = keyboardDesignComponent;
+  }
+
+  constructor(private playerKeyboardService: PlayerKeyboardService) {
   }
 
   ngOnInit() {
+    this.skeletonDesign = new KeyboardDesign(KeyboardDesignNoneComponent, this.playerKeyboardService.keyboardConfig);
   }
-
 }
