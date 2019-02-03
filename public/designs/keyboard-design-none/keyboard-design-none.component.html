@@ -1,7 +1,7 @@
-<div>
+<div class="design-wrapper">
   <span>name : {{name}} | </span>
   <span>input : {{(keyboardConfig && keyboardConfig.input) ? keyboardConfig.input.name : 'none'}} | </span>
   <span>output : {{(keyboardConfig && keyboardConfig.output) ? keyboardConfig.output.name : 'none'}} | </span>
   <span>keys : {{keyboardConfig ? keyboardConfig.keyLength : 'NO KEYS'}}</span>
-  <app-keyboard *ngIf="keyboardConfig" [keyboardModel]="keyboardConfig"></app-keyboard>
+  <app-keyboard *ngIf="keyboardConfig" [keyboardConfig]="keyboardConfig"></app-keyboard>
 </div>

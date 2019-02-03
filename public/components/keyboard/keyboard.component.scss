@@ -1,72 +1,58 @@
-div.keyboard-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  align-content: stretch;
+div.keys-wrapper {
+  display: inline-flex;
+  flex-direction: row;
+  width: auto;
 
-  .keys-scrollbar {
-    overflow-x: auto;
+  .key {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     display: flex;
-    width: 100%;
+    align-items: flex-end;
+    justify-content: center;
+    width: 24px;
+    min-width: 24px;
+    border: 1px solid black;
+    font-size: 8pt;
+    -webkit-transition: background-color 0.1s;
+    -moz-transition: background-color 0.1s;
+    -ms-transition: background-color 0.1s;
+    -o-transition: background-color 0.1s;
+    transition: background-color 0.1s;
 
-    .keys-wrapper {
-      display: inline-flex;
-      flex-direction: row;
-      margin: auto;
-      width: auto;
+    &.regular {
+      height: 120px;
+      margin: 0 1px;
+      z-index: 1;
+      background-color: rgb(250, 250, 250);
+      color: black;
+    }
 
-      .key {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        width: 24px;
-        min-width: 24px;
-        border: 1px solid black;
-        font-size: 8pt;
-        -webkit-transition: background-color 0.1s;
-        -moz-transition: background-color 0.1s;
-        -ms-transition: background-color 0.1s;
-        -o-transition: background-color 0.1s;
-        transition: background-color 0.1s;
+    &.sharp {
+      height: 80px;
+      margin: 0 -13px;
+      z-index: 2;
+      background-color: rgb(50, 50, 50);
+      color: white
+    }
 
-        &.regular {
-          height: 120px;
-          margin: 0 1px;
-          z-index: 1;
-          background-color: rgb(250, 250, 250);
-          color: black;
-        }
+    // Prevent scrollbar from appearing when sharp key is the last key because parent container collapses
+    &:last-child.sharp {
+      margin-right: 0;
+    }
 
-        &.sharp {
-          height: 80px;
-          margin: 0 -13px;
-          z-index: 2;
-          background-color: rgb(50, 50, 50);
-          color: white
-        }
+    &.active {
+      background-color: aquamarine;
+    }
 
-        // Prevent scrollbar from appearing when sharp key is the last key because parent container collapses
-        &:last-child.sharp {
-          margin-right: 0;
-        }
+    &.non-active {
+      //  Nothing
+    }
 
-        &.active {
-          background-color: aquamarine;
-        }
-
-        &.non-active {
-          //  Nothing
-        }
-
-        span {
-          bottom: 0;
-        }
-      }
+    span {
+      bottom: 0;
     }
   }
+
 }

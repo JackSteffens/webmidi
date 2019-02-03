@@ -11,7 +11,7 @@ import { Key } from '../../models/key';
 })
 export class KeyboardComponent implements OnInit {
   @Input()
-  keyboardModel: KeyboardConfig;
+  keyboardConfig: KeyboardConfig;
   velocity: number = 100;
 
   constructor() {
@@ -23,8 +23,8 @@ export class KeyboardComponent implements OnInit {
 
   public sendToOutput(command, key, velocity): void {
     this.toggleKey(key, velocity);
-    if (this.validOutput(this.keyboardModel.output)) {
-      this.keyboardModel.output.send([command, key.number, velocity]);
+    if (this.validOutput(this.keyboardConfig.output)) {
+      this.keyboardConfig.output.send([command, key.number, velocity]);
     } else {
       console.warn('No connected output port');
     }
@@ -53,7 +53,7 @@ export class KeyboardComponent implements OnInit {
       let command: number = midiMessageEvent.data[0]; // Key pressed (128) or released (144) command
       let keyNumber: number = midiMessageEvent.data[1];
       let velocity: number = midiMessageEvent.data[2];
-      let key: Key = this.keyboardModel.keys[keyNumber - this.keyboardModel.minKeyNumber];
+      let key: Key = this.keyboardConfig.keys[keyNumber - this.keyboardConfig.minKeyNumber];
 
       if (key) {
         key.active = velocity !== 0 || command === 128;
@@ -62,15 +62,15 @@ export class KeyboardComponent implements OnInit {
       command = velocity === 0 && command === 144 ? 128 : command;
 
       if (!this.inputSameSourceAsOutput()) {
-        if (this.validOutput(this.keyboardModel.output)) {
-          this.keyboardModel.output.send([command, keyNumber, velocity]);
+        if (this.validOutput(this.keyboardConfig.output)) {
+          this.keyboardConfig.output.send([command, keyNumber, velocity]);
         }
       }
     });
   }
 
   inputSameSourceAsOutput(): boolean {
-    return this.keyboardModel.output.name === this.keyboardModel.input.name;
+    return this.keyboardConfig.output.name === this.keyboardConfig.input.name;
   }
 
 }

@@ -1,0 +1,17 @@
+<div class="design-wrapper">
+  <div class="top-half">
+    <!--<div class="knobs-wrapper">knobs</div>-->
+    <div class="logo-wrapper">
+      <div class="arturia-title-wrapper"><h2 class="arturia-title">ARTURIA</h2><b class="copyright">&#xA9;</b></div>
+      <span class="arturia-slogan">YOUR EXPERIENCE <b class="dot">&#183;</b> YOUR SOUND</span>
+    </div>
+  </div>
+
+  <div class="bottom-half">
+    <div class="sequence-wrapper">left</div>
+    <div class="key-bed-wrapper">
+      <app-keyboard *ngIf="keyboardConfig" [keyboardConfig]="keyboardConfig"></app-keyboard>
+    </div>
+    <div class="right-whitespace">right</div>
+  </div>
+</div>

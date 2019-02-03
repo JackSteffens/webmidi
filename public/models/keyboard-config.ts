@@ -5,7 +5,7 @@ import MIDIOutput = WebMidi.MIDIOutput;
 export class KeyboardConfig {
   // Keys
   keyLength: number;
-  keys: Array<Key>;
+  private _keys: Array<Key>;
   minKeyNumber: number;
   minKeyNote: string; // ex: 'A2' or 'A#2'
   maxKeyNumber: number;
@@ -17,13 +17,28 @@ export class KeyboardConfig {
   constructor(input: MIDIInput, output: MIDIOutput, keys: Array<Key>) {
     this._input = input;
     this._output = output;
-    this.keys = keys;
+    this._keys = keys;
     this.keyLength = keys.length;
     if (keys.length > 0) {
       this.minKeyNumber = keys[0].number;
       this.minKeyNote = keys[0].note;
       this.maxKeyNumber = keys[keys.length - 1].number;
       this.maxKeyNote = keys[keys.length - 1].note;
+    }
+  }
+
+  get keys(): Array<Key> {
+    return this._keys;
+  }
+
+  set keys(newKeys: Array<Key>) {
+    this._keys = newKeys;
+    this.keyLength = newKeys.length;
+    if (this._keys.length > 0) {
+      this.minKeyNumber = this._keys[0].number;
+      this.minKeyNote = this._keys[0].note;
+      this.maxKeyNumber = this._keys[this._keys.length - 1].number;
+      this.maxKeyNote = this._keys[this._keys.length - 1].note;
     }
   }
 

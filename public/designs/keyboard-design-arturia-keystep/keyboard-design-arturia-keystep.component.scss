@@ -1,0 +1,90 @@
+div.design-wrapper {
+  max-width: 100vw;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  div.top-half {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    div.knobs-wrapper {
+      width: 200px;
+      height: 20px;
+      background-color: grey;
+    }
+
+    div.logo-wrapper {
+      font-family: sans-serif;
+
+      div.arturia-title-wrapper {
+        margin-bottom: -5px;
+      }
+
+      h2.arturia-title {
+        display: inline;
+        margin: 0;
+        letter-spacing: 3px;
+
+        font-size: xx-large;
+        line-height: 10px;
+
+      }
+
+      b.copyright {
+        vertical-align: bottom;
+        margin-left: -.3rem;
+        line-height: 40px;
+      }
+
+      span.arturia-slogan {
+        display: block;
+        font-size: .6rem;
+
+        b.dot {
+          font-weight: 900;
+        }
+      }
+    }
+  }
+
+  div.bottom-half {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    max-width: 100vw;
+    overflow: hidden;
+
+    div.sequence-wrapper {
+      width: 100px;
+      float: left;
+    }
+
+    div.right-whitespace {
+      width: 50px;
+      float: right;
+    }
+
+    div.sequence-wrapper, div.right-whitespace {
+      flex: 0 0 auto;
+      border: 1px solid red;
+    }
+
+    div.key-bed-wrapper {
+      flex: 0 1 0;
+      min-width: auto;
+      // TODO REMOVE CALC(). HANDLE SHRINKING THROUGH FLEX-BOX
+      max-width: calc(100vw - 150px);
+
+      app-keyboard {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  }
+}

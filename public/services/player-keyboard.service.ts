@@ -120,10 +120,6 @@ export class PlayerKeyboardService {
   }
 
   constructor() {
-    let keys: Array<Key> = [];
-    for (let index = 21; index < 108; index++) {
-      keys.push(new Key(index));
-    }
-    this._keyboardConfig = new KeyboardConfig(null, null, keys);
+    this._keyboardConfig = new KeyboardConfig(null, null, []);
   }
 }

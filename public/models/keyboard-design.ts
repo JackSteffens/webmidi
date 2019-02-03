@@ -3,7 +3,9 @@ import { KeyboardConfig } from './keyboard-config';
 import { KeyboardDesignInterface } from './keyboard-design-interface';
 
 export class KeyboardDesign implements KeyboardDesignInterface {
-  public name: string; // Will be set by the individual Components
+  public readonly name: string;
+  public readonly endKeyNumber: number;
+  public readonly startKeyNumber: number;
 
   constructor(public component: Type<any>, public keyboardConfig: KeyboardConfig) {
   }
