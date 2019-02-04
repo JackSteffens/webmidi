@@ -1,0 +1,10 @@
+div.fieldset-wrapper {
+  display: flex;
+  flex-direction: row;
+
+  div.designs-column, div.keys-column {
+    display: flex;
+    flex-direction: column;
+  }
+}
+

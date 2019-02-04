@@ -1,6 +1,7 @@
 import { Key } from './key';
 import MIDIInput = WebMidi.MIDIInput;
 import MIDIOutput = WebMidi.MIDIOutput;
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export class KeyboardConfig {
   // Keys

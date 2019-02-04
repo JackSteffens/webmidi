@@ -1,0 +1,42 @@
+<form name="keyboardDesignSelectorForm">
+  <div class="fieldset-wrapper">
+    <fieldset id="designs">
+      <legend>Designs :</legend>
+      <div class="designs-column">
+        <label *ngFor="let design of keyboardDesigns | keyvalue">
+          <input type="radio"
+                 name="inputs"
+                 [value]="design.value"
+                 [(ngModel)]="selectedDesign"
+                 (change)="onDesignSelected()">
+          {{design.key}} | keys : {{design.value.component.endKeyNumber - design.value.component.startKeyNumber + 1}}
+        </label>
+      </div>
+    </fieldset>
+    <fieldset id="keys">
+      <legend>Keys :</legend>
+      <div class="keys-column">
+        <label>
+          <input type="number"
+                 name="minkey"
+                 min="0"
+                 max="{{maxKey-1}}"
+                 [(ngModel)]="minKey"
+                 (ngModelChange)="updateKeys()">
+          min key
+        </label>
+
+        <label>
+          <input type="number"
+                 name="maxKey"
+                 min="{{minKey+1}}"
+                 max="127"
+                 [(ngModel)]="maxKey"
+                 (ngModelChange)="updateKeys()">
+          max key
+        </label>
+      </div>
+    </fieldset>
+  </div>
+</form>
+

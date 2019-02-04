@@ -8,9 +8,10 @@ import { SetupPageComponent } from '../components/setup-page/setup-page.componen
 import { RouterModule, Routes } from '@angular/router';
 import { SplashPageComponent } from '../components/splash-page/splash-page.component';
 import { PlayerKeyboardComponent } from '../components/player-keyboard/player-keyboard.component';
-import { KeyboardDesignNoneComponent } from '../designs/keyboard-design-none/keyboard-design-none.component';
+import { KeyboardDesignMinimalComponent } from '../designs/keyboard-design-minimal/keyboard-design-minimal.component';
 import { KeyboardDesignDirective } from '../directives/keyboard-design.directive';
 import { KeyboardDesignArturiaKeystepComponent } from '../designs/keyboard-design-arturia-keystep/keyboard-design-arturia-keystep.component';
+import { KeyboardDesignSelectorComponent } from '../components/keyboard-design-selector/keyboard-design-selector.component';
 
 // TODO Move to separate "routing" module
 let routes: Routes = [
@@ -27,16 +28,17 @@ let routes: Routes = [
     SetupPageComponent,
     SplashPageComponent,
     PlayerKeyboardComponent,
-    KeyboardDesignNoneComponent,
+    KeyboardDesignMinimalComponent,
     KeyboardDesignDirective,
-    KeyboardDesignArturiaKeystepComponent
+    KeyboardDesignArturiaKeystepComponent,
+    KeyboardDesignSelectorComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     FormsModule
   ],
-  entryComponents: [KeyboardDesignNoneComponent, KeyboardDesignArturiaKeystepComponent],
+  entryComponents: [KeyboardDesignMinimalComponent, KeyboardDesignArturiaKeystepComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

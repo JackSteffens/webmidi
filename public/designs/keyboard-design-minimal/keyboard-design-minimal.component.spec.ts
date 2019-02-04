@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { KeyboardDesignNoneComponent } from './keyboard-design-none.component';
+import { KeyboardDesignMinimalComponent } from './keyboard-design-minimal.component';
 
 describe('KeyboardDesignNoneComponent', () => {
-  let component: KeyboardDesignNoneComponent;
-  let fixture: ComponentFixture<KeyboardDesignNoneComponent>;
+  let component: KeyboardDesignMinimalComponent;
+  let fixture: ComponentFixture<KeyboardDesignMinimalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ KeyboardDesignNoneComponent ]
+      declarations: [ KeyboardDesignMinimalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(KeyboardDesignNoneComponent);
+    fixture = TestBed.createComponent(KeyboardDesignMinimalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -2,8 +2,8 @@ import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular
 import { KeyboardConfig } from '../../models/keyboard-config';
 import { KeyboardDesignDirective } from '../../directives/keyboard-design.directive';
 import { KeyboardDesign } from '../../models/keyboard-design';
-import { KeyboardDesignInterface } from '../../models/keyboard-design-interface';
 import { PlayerKeyboardService } from '../../services/player-keyboard.service';
+import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
 
 @Component({
   selector: 'app-player-keyboard',
@@ -41,7 +41,7 @@ export class PlayerKeyboardComponent implements OnInit {
         viewContainerRef.clear();
 
         let componentRef = viewContainerRef.createComponent(componentFactory);
-        (<KeyboardDesignInterface>componentRef.instance).keyboardConfig = keyboardDesign.keyboardConfig;
+        (<AbstractKeyboardDesign>componentRef.instance).keyboardConfig = keyboardDesign.keyboardConfig;
       } else {
         console.debug('Trying to set a KeyboardDesign for PlayerKeyboardComponent but no keyboard design was set in the PlayerKeyBoardService');
       }

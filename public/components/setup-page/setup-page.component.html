@@ -1,6 +1,3 @@
 <app-midi-selector [inputPortSelectedFn]="onInputSelectedFn"
                    [outputPortSelectedFn]="onOutputSelectedFn"></app-midi-selector>
-
-<h2>Design : </h2>
-<button (click)="setPlayerKeyboardDesign(skeletonDesign)">Skeleton</button>
-<button (click)="setPlayerKeyboardDesign(arturiaKeystepDesign)">Arturia Keystep</button>
+<app-keyboard-design-selector></app-keyboard-design-selector>

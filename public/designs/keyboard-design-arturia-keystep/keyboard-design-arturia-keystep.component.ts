@@ -1,32 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { KeyboardDesignInterface } from '../../models/keyboard-design-interface';
 import { KeyboardConfig } from '../../models/keyboard-config';
-import { Key } from '../../models/key';
+import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
 
 @Component({
   selector: 'app-keyboard-design-arturia-keystep',
   templateUrl: './keyboard-design-arturia-keystep.component.html',
   styleUrls: ['./keyboard-design-arturia-keystep.component.scss']
 })
-export class KeyboardDesignArturiaKeystepComponent implements OnInit, KeyboardDesignInterface {
-  readonly name: string = 'Arturia Keystep';
-  readonly startKeyNumber: number = 41; // 41
-  readonly endKeyNumber: number = 73; // 73
+export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesign implements OnInit {
+  static readonly designName: string = 'Arturia Keystep';
+  static readonly startKeyNumber: number = 41; // 41
+  static readonly endKeyNumber: number = 72; // 73
+
+  public name: string = KeyboardDesignArturiaKeystepComponent.designName;
+  public startKeyNumber: number = KeyboardDesignArturiaKeystepComponent.startKeyNumber;
+  public endKeyNumber: number = KeyboardDesignArturiaKeystepComponent.endKeyNumber;
   keyboardConfig: KeyboardConfig;
 
   constructor() {
-  }
-
-  private initKeys() {
-    let keys: Array<Key> = [];
-    for (let index = this.startKeyNumber; index < this.endKeyNumber; index++) {
-      keys.push(new Key(index));
-    }
-    this.keyboardConfig.keys = keys;
+    super();
   }
 
   ngOnInit() {
-    this.initKeys();
+    AbstractKeyboardDesign.initKeys(this.startKeyNumber, this.endKeyNumber, this.keyboardConfig);
   }
-
 }

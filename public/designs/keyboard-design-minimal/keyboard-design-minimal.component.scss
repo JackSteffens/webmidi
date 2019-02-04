@@ -1,4 +1,8 @@
 div.design-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
   app-keyboard {
     display: block;
     overflow-x: auto;
