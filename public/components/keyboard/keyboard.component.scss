@@ -11,9 +11,10 @@ div.keys-wrapper {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    width: 24px;
+    width: 32px;
     min-width: 24px;
     border: 1px solid black;
+    border-radius: 0 0 2px 2px;
     font-size: 8pt;
     -webkit-transition: background-color 0.1s;
     -moz-transition: background-color 0.1s;
@@ -22,7 +23,7 @@ div.keys-wrapper {
     transition: background-color 0.1s;
 
     &.regular {
-      height: 120px;
+      height: 160px;
       margin: 0 1px;
       z-index: 1;
       background-color: rgb(250, 250, 250);
@@ -30,8 +31,8 @@ div.keys-wrapper {
     }
 
     &.sharp {
-      height: 80px;
-      margin: 0 -13px;
+      height: 105px; // Should be around 66% of the white key's length
+      margin: 0 -17px; // 50% of the width -1px
       z-index: 2;
       background-color: rgb(50, 50, 50);
       color: white

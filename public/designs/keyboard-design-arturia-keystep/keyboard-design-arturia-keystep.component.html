@@ -1,17 +1,66 @@
 <div class="design-wrapper">
-  <div class="top-half">
-    <!--<div class="knobs-wrapper">knobs</div>-->
-    <div class="logo-wrapper">
-      <div class="arturia-title-wrapper"><h2 class="arturia-title">ARTURIA</h2><b class="copyright">&#xA9;</b></div>
-      <span class="arturia-slogan">YOUR EXPERIENCE <b class="dot">&#183;</b> YOUR SOUND</span>
-    </div>
-  </div>
+  <div class="halves-container">
 
-  <div class="bottom-half">
-    <div class="sequence-wrapper">left</div>
-    <div class="key-bed-wrapper">
-      <app-keyboard *ngIf="keyboardConfig" [keyboardConfig]="keyboardConfig"></app-keyboard>
+    <div class="top-half">
+      <div class="knobs-wrapper">
+        <div class="switch">s</div>
+        <div class="knob-seq">k1</div>
+        <div class="knob-time">k2</div>
+        <div class="knob-rate">k3</div>
+      </div>
+
+      <div class="media-buttons-wrapper">
+        <div class="tap">Tap</div>
+        <div class="record">&#9711;</div>
+        <div class="stop">&#9633;</div>
+        <div class="play-pause">ll/&#9656;</div>
+      </div>
+
+      <div class="top-half-whitespace">&nbsp;</div>
+
+      <div class="logo-wrapper">
+        <div class="arturia-title-wrapper"><h2 class="arturia-title">ARTURIA</h2><b class="copyright">&#xA9;</b></div>
+        <span class="arturia-slogan">YOUR EXPERIENCE <b class="dot">&#183;</b> YOUR SOUND</span>
+      </div>
     </div>
-    <div class="right-whitespace">right</div>
+
+    <div class="bottom-half">
+      <div class="sequence-wrapper">
+        <div class="control-buttons">
+          <div class="hold">Hold</div>
+          <span>&nbsp;</span>
+          <div class="shift">Shift</div>
+        </div>
+        <div class="octave-buttons">
+          <div class="minus">Oct-</div>
+          <span>reset</span>
+          <div class="plus">Oct+</div>
+        </div>
+
+        <div class="bars-wrapper">
+          <div class="left-bar">
+            <div class="bar-inner">
+              <span>&#8593;</span>
+              <span>&#8212;</span>
+              <span>&#8595;</span>
+            </div>
+            <span>Pitch</span>
+          </div>
+          <div class="bars-whitespace"></div>
+          <div class="right-bar">
+            <div class="bar-inner">
+              <span>&#8593;</span>
+              <span>&#8212;</span>
+            </div>
+            <span>Mod</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="key-bed-wrapper">
+        <app-keyboard *ngIf="keyboardConfig" [keyboardConfig]="keyboardConfig"></app-keyboard>
+      </div>
+    </div>
+
   </div>
 </div>
