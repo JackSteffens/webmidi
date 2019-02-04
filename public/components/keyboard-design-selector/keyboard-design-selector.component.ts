@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { KeyboardDesignSelectorService } from '../../services/keyboard-design-selector.service';
 import { PlayerKeyboardService } from '../../services/player-keyboard.service';
 import { KeyboardDesign } from '../../models/keyboard-design';
-import { Key } from '../../models/key';
 import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
 
 @Component({
@@ -29,8 +28,16 @@ export class KeyboardDesignSelectorComponent implements OnInit {
     AbstractKeyboardDesign.initKeys(this.minKey, this.maxKey, this.playerKeyboardService.keyboardConfig);
   }
 
+  private preSelectDesign() {
+    if (this.playerKeyboardService.playerKeyboardDesign) {
+      this.selectedDesign = this.keyboardDesigns.get(this.playerKeyboardService.playerKeyboardDesign.name);
+      this.minKey = this.playerKeyboardService.keyboardConfig.minKeyNumber;
+      this.maxKey = this.playerKeyboardService.keyboardConfig.maxKeyNumber;
+    }
+  }
+
   ngOnInit() {
     this.keyboardDesigns = this.keyboardDesignSelectorService.getAvailableDesigns(this.playerKeyboardService.keyboardConfig);
-    console.log(this.keyboardDesigns);
+    this.preSelectDesign();
   }
 }

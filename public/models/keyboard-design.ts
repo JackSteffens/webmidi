@@ -9,11 +9,8 @@ export class KeyboardDesign {
 
   // Added `any` to shut up the linter
   constructor(public component: any | Type<any> | AbstractKeyboardDesign, public keyboardConfig: KeyboardConfig) {
-    this.name = component.name;
+    this.name = component.designName;
     this.endKeyNumber = component.endKeyNumber;
     this.startKeyNumber = component.startKeyNumber;
-  }
-
-  initKeys(): void {
   }
 }
