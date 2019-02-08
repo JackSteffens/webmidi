@@ -1,3 +1,5 @@
+@import "../../colors.scss";
+
 div.keys-wrapper {
   display: inline-flex;
   flex-direction: row;
@@ -9,32 +11,57 @@ div.keys-wrapper {
     -ms-user-select: none;
     user-select: none;
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     width: 32px;
     min-width: 24px;
-    border: 1px solid black;
+    border: 1px solid;
     border-radius: 0 0 2px 2px;
     font-size: 8pt;
     -webkit-transition: background-color 0.1s;
     -moz-transition: background-color 0.1s;
     -o-transition: background-color 0.1s;
     transition: background-color 0.1s;
+    position: relative;
+
+    div.overlay {
+      display: inline-block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
 
     &.regular {
       height: 160px;
       margin: 0 1px;
       z-index: 1;
-      background-color: rgb(250, 250, 250);
+      box-shadow: 0 0 5px -2px $grey-900;
+      background-color: $grey-100;
+      border-color: $grey-400;
+      border-top-color: $grey-500;
+      border-bottom-width: 3px;
+      border-bottom-color: $grey-300;
       color: black;
+
+      div.inner-top {
+        height: 100%;
+        width: 100%;
+        box-shadow: inset 0 -1px 25px -10px $grey-900;
+      }
+
+      div.overlay {
+        transition: box-shadow .15s;
+      }
     }
 
     &.sharp {
       height: 105px; // Should be around 66% of the white key's length
       width: 21px; // 66% width of the white key's width
       margin: 0 -17px; // 50% of the width -1px
+      border-color: $grey-800;
       z-index: 2;
-      background-color: rgb(50, 50, 50);
+      background-color: $grey-800;
       color: white;
 
       &.A\# {
@@ -76,6 +103,27 @@ div.keys-wrapper {
           margin-left: 5px;
         }
       }
+
+      div.inner-top {
+        background-color: $grey-900;
+        height: 96px;
+        border-radius: 3px 3px 15px 15px;
+        box-shadow: inset 0 -5px 5px -5px $grey-700;
+        width: 22px;
+      }
+
+      div.inner-bottom {
+        background-color: $grey-900;
+        height: 7px;
+        transition: height .3s;
+        border-radius: 10px 10px 0 0;
+        box-shadow: inset 0 5px 10px -3px $grey-700;
+        width: 22px;
+      }
+
+      div.inner-top, div.inner-bottom, div.overlay {
+        transition: height .15s, box-shadow .15s;
+      }
     }
 
     // Prevent scrollbar from appearing when sharp key is the last key because parent container collapses
@@ -84,7 +132,29 @@ div.keys-wrapper {
     }
 
     &.active {
-      background-color: aquamarine;
+      &.regular {
+        border-bottom-width: 1px;
+        height: 162px;
+
+        div.overlay {
+          box-shadow: inset 0 5px 25px 5px $lime-500;
+        }
+      }
+
+      &.sharp {
+        div.overlay {
+          box-shadow: inset 0 10px 30px -5px rgba($lime-a200, .85);
+        }
+
+        div.inner-top {
+          box-shadow: inset 0 -15px 30px -5px rgba($grey-700, .75);
+          height: 105px;
+        }
+
+        div.inner-bottom {
+          height: 0
+        }
+      }
     }
 
     &.non-active {
