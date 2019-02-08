@@ -9,7 +9,7 @@
                  [value]="design.value"
                  [(ngModel)]="selectedDesign"
                  (change)="onDesignSelected()">
-          {{design.key}} | keys : {{design.value.component.endKeyNumber - design.value.component.startKeyNumber + 1}}
+          {{design.key}} | keys : {{design.value.designComponent.endKeyNumber - design.value.designComponent.startKeyNumber + 1}}
         </label>
       </div>
     </fieldset>

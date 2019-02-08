@@ -10,7 +10,7 @@ export abstract class AbstractKeyboardDesign {
   /*
   TODO Improve its performance. Starts lagging when the amount of keys is large
    */
-  static initKeys(startKeyNumber: number, endKeyNumber: number, keyboardConfig: KeyboardConfig): void {
+  public static initKeys(startKeyNumber: number, endKeyNumber: number, keyboardConfig: KeyboardConfig): void {
     let keys: Array<Key> = [];
     for (let index = startKeyNumber; index <= endKeyNumber; index++) {
       keys.push(new Key(index));

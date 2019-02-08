@@ -34,8 +34,8 @@ export class PlayerKeyboardComponent implements OnInit {
 
   listenOnKeyboardDesignChanges(): void {
     this.playerKeyboardService.playerKeyboardDesignObservable.subscribe((keyboardDesign: KeyboardDesign) => {
-      if (keyboardDesign && keyboardDesign.component) {
-        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(keyboardDesign.component);
+      if (keyboardDesign && keyboardDesign.designComponent) {
+        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(keyboardDesign.designComponent);
 
         let viewContainerRef = this.keyboardDesignHost.viewContainerRef;
         viewContainerRef.clear();
