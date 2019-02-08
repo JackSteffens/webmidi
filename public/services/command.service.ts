@@ -6,13 +6,12 @@ import { Injectable } from '@angular/core';
 export class CommandService {
   minNote: number;
   maxNote: number;
-  baseNotes: Array<string>;
+  static baseNotes: Array<string> = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
   static notes: Map<number, string>; // keys index ranging from 0 to 127, base note + octave like F#4
 
   constructor() {
     this.minNote = 0;
     this.maxNote = 127;
-    this.baseNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     this.initNotes();
   }
 
@@ -37,7 +36,7 @@ export class CommandService {
 
   getBaseNote(noteIndex): string {
     let mod = noteIndex % 12;
-    return this.baseNotes[mod];
+    return CommandService.baseNotes[mod];
   }
 
   getOctave(noteIndex): string {

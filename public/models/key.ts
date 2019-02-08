@@ -1,6 +1,7 @@
 import { CommandService } from '../services/command.service';
 
 export class Key {
+  base: string;
   note: string;
   number: number;
   octave: number;
@@ -16,19 +17,21 @@ export class Key {
     if (typeof note === 'string') {
       this.note = note;
       this.number = this.number ? this.number : CommandService.getNumber(note);
-      this.octave = this.getOctave(note);
-      this.sharp = this.isSharp(note);
+      this.octave = Key.getOctave(note);
+      this.sharp = Key.isSharp(note);
       this.active = false;
     } else {
       throw new TypeError('No note given');
     }
+
+    this.base = CommandService.baseNotes[this.number % 12];
   }
 
-  private isSharp(note): boolean {
+  private static isSharp(note): boolean {
     return note.includes('#');
   }
 
-  private getOctave(note): number {
+  private static getOctave(note): number {
     let octave = Number(note.match(new RegExp('\\d', 'g'))[0]);
     return octave ? octave : 0;
   }

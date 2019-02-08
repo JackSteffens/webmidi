@@ -18,7 +18,6 @@ div.keys-wrapper {
     font-size: 8pt;
     -webkit-transition: background-color 0.1s;
     -moz-transition: background-color 0.1s;
-    -ms-transition: background-color 0.1s;
     -o-transition: background-color 0.1s;
     transition: background-color 0.1s;
 
@@ -32,10 +31,51 @@ div.keys-wrapper {
 
     &.sharp {
       height: 105px; // Should be around 66% of the white key's length
+      width: 21px; // 66% width of the white key's width
       margin: 0 -17px; // 50% of the width -1px
       z-index: 2;
       background-color: rgb(50, 50, 50);
-      color: white
+      color: white;
+
+      &.A\# {
+        margin-left: -10px;
+
+        & + .B {
+          margin-left: 2px;
+        }
+      }
+
+      &.C\# {
+        margin-left: -17px;
+
+        & + .D {
+          margin-left: 9px;
+        }
+      }
+
+      &.D\# {
+        margin-left: -8px;
+
+        & + .E {
+          margin-left: 0;
+        }
+      }
+
+      &.F\# {
+        margin-left: -16px;
+
+        & + .G {
+          margin-left: 8px;
+        }
+      }
+
+      &.G\# {
+        margin-left: -13px;
+
+        & + .A {
+          margin-left: 5px;
+        }
+      }
     }
 
     // Prevent scrollbar from appearing when sharp key is the last key because parent container collapses
