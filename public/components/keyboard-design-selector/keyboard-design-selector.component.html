@@ -1,42 +1,52 @@
-<form name="keyboardDesignSelectorForm">
-  <div class="fieldset-wrapper">
-    <fieldset id="designs">
-      <legend>Designs :</legend>
-      <div class="designs-column">
-        <label *ngFor="let design of keyboardDesigns | keyvalue">
-          <input type="radio"
-                 name="inputs"
-                 [value]="design.value"
-                 [(ngModel)]="selectedDesign"
-                 (change)="onDesignSelected()">
-          {{design.key}} | keys : {{design.value.designComponent.endKeyNumber - design.value.designComponent.startKeyNumber + 1}}
-        </label>
-      </div>
-    </fieldset>
-    <fieldset id="keys">
-      <legend>Keys :</legend>
-      <div class="keys-column">
-        <label>
-          <input type="number"
-                 name="minkey"
-                 min="0"
-                 max="{{maxKey-1}}"
-                 [(ngModel)]="minKey"
-                 (ngModelChange)="updateKeys()">
-          min key
-        </label>
+<div class="design-selector-wrapper">
+  <div class="design-card" *ngFor="let design of keyboardDesigns | keyvalue"
+       [ngClass]="{'selected': (selectedDesign && design.value.designName === selectedDesign.designName)}">
+    <div class="design-card-image">
+      <app-design-preview [keyboardDesign]="design.value"></app-design-preview>
+    </div>
 
-        <label>
-          <input type="number"
-                 name="maxKey"
-                 min="{{minKey+1}}"
-                 max="127"
-                 [(ngModel)]="maxKey"
-                 (ngModelChange)="updateKeys()">
-          max key
-        </label>
+    <div class="design-card-content">
+      <div>
+        <span class="title">{{design.value.designName}}</span>
+        <span>Keys : {{design.value.designComponent.endKeyNumber - design.value.designComponent.startKeyNumber + 1}}</span>
       </div>
-    </fieldset>
+      <form name="keyboardDesignSelectorForm">
+        <div class="fieldset-wrapper"
+             *ngIf="(selectedDesign && design.value.designName === selectedDesign.designName)">
+          <fieldset id="keys">
+            <legend>Keys :</legend>
+            <div class="keys-column">
+              <label>
+                <input type="number"
+                       name="minkey"
+                       min="0"
+                       max="{{maxKey-1}}"
+                       [(ngModel)]="minKey"
+                       (ngModelChange)="updateKeys()">
+                min key
+              </label>
+
+              <label>
+                <input type="number"
+                       name="maxKey"
+                       min="{{minKey+1}}"
+                       max="127"
+                       [(ngModel)]="maxKey"
+                       (ngModelChange)="updateKeys()">
+                max key
+              </label>
+            </div>
+          </fieldset>
+        </div>
+      </form>
+    </div>
+
+    <div class="action-buttons">
+      <button (click)="selectDesign(design.key)"
+              *ngIf="(!selectedDesign || (design.value.designName !== selectedDesign.designName))">
+        select
+      </button>
+    </div>
   </div>
-</form>
+</div>
 

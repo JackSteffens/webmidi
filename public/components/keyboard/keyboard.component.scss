@@ -104,6 +104,11 @@ div.keys-wrapper {
         }
       }
 
+      // Prevent key from being cut-off when it's the first key in the key-bed
+      &:first-child {
+        margin-left: 0;
+      }
+
       div.inner-top {
         background-color: $grey-900;
         height: 96px;

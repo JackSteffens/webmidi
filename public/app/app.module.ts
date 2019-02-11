@@ -12,6 +12,7 @@ import { KeyboardDesignMinimalComponent } from '../designs/keyboard-design-minim
 import { KeyboardDesignDirective } from '../directives/keyboard-design.directive';
 import { KeyboardDesignArturiaKeystepComponent } from '../designs/keyboard-design-arturia-keystep/keyboard-design-arturia-keystep.component';
 import { KeyboardDesignSelectorComponent } from '../components/keyboard-design-selector/keyboard-design-selector.component';
+import { DesignPreviewComponent } from '../components/design-preview/design-preview.component';
 
 // TODO Move to separate "routing" module
 let routes: Routes = [
@@ -31,7 +32,8 @@ let routes: Routes = [
     KeyboardDesignMinimalComponent,
     KeyboardDesignDirective,
     KeyboardDesignArturiaKeystepComponent,
-    KeyboardDesignSelectorComponent
+    KeyboardDesignSelectorComponent,
+    DesignPreviewComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

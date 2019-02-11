@@ -3,7 +3,6 @@ import { KeyboardDesignSelectorService } from '../../services/keyboard-design-se
 import { PlayerKeyboardService } from '../../services/player-keyboard.service';
 import { KeyboardDesign } from '../../models/keyboard-design';
 import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
-import { Key } from '../../models/key';
 
 @Component({
   selector: 'app-keyboard-design-selector',
@@ -19,15 +18,19 @@ export class KeyboardDesignSelectorComponent implements OnInit {
   constructor(private keyboardDesignSelectorService: KeyboardDesignSelectorService, private playerKeyboardService: PlayerKeyboardService) {
   }
 
-  public onDesignSelected() {
-    this.playerKeyboardService.playerKeyboardDesign = this.selectedDesign;
-    this.maxKey = this.playerKeyboardService.playerKeyboardDesign.endKeyNumber;
-    this.minKey = this.playerKeyboardService.playerKeyboardDesign.startKeyNumber;
-  }
-
   // FIXME Don't use the KeyboardDesign as a util class !!!!
   public updateKeys() {
     AbstractKeyboardDesign.initKeys(this.minKey, this.maxKey, this.playerKeyboardService.keyboardConfig);
+  }
+
+  public selectDesign(designName: string) {
+    this.selectedDesign = this.keyboardDesigns.get(designName);
+    // prevent animation lag
+    window.requestAnimationFrame(() => {
+      this.playerKeyboardService.playerKeyboardDesign = this.selectedDesign;
+      this.maxKey = this.playerKeyboardService.playerKeyboardDesign.endKeyNumber;
+      this.minKey = this.playerKeyboardService.playerKeyboardDesign.startKeyNumber;
+    });
   }
 
   private preSelectDesign() {
