@@ -19,10 +19,11 @@ div.design-selector-wrapper {
     min-width: 225px;
     height: 330px;
     min-height: 300px;
-    transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out, min-width .3s ease-in-out;
 
     &.selected {
       width: 450px;
+      min-width: 450px;
 
       div.design-card-image {
         justify-content: center;
