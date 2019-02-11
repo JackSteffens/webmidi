@@ -21,6 +21,7 @@ export class MidiSelectorComponent implements OnInit {
   public selectedOutput: MIDIOutput;
   public availableInputs: Array<MIDIInput>;
   public availableOutputs: Array<MIDIOutput>;
+  public midiSupported: boolean = false;
 
   constructor(private playerKeyboardService: PlayerKeyboardService) {
   }
@@ -77,7 +78,13 @@ export class MidiSelectorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initInputs();
-    this.initOutputs();
+    if (navigator && navigator.requestMIDIAccess) {
+      this.midiSupported = true;
+      this.initInputs();
+      this.initOutputs();
+    } else {
+      this.midiSupported = false;
+      console.warn('This browser does not support WebMIDI');
+    }
   }
 }

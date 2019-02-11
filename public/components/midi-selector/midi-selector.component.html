@@ -1,5 +1,5 @@
 <form name="midiPortSelector">
-  <div class="list-wrappers">
+  <div class="list-wrappers" *ngIf="midiSupported">
     <fieldset id="inputs">
       <legend>Inputs:</legend>
       <div class="inputs-column">
@@ -28,4 +28,5 @@
       </div>
     </fieldset>
   </div>
+  <h4 *ngIf="!midiSupported">WebMIDI is not supported in this browser</h4>
 </form>
