@@ -1,0 +1,21 @@
+@import "../../colors.scss";
+
+svg {
+  g {
+    transform-origin: center;
+
+    polygon.knob-polygon {
+      fill: $grey-900;
+      stroke: $grey-900;
+      stroke-width: 3;
+      stroke-linejoin: round;
+    }
+
+    line.knob-line {
+      stroke: white;
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+  }
+
+}

@@ -31,6 +31,7 @@ div.design-wrapper {
 
       div.knobs-wrapper {
         background-color: $grey-400;
+        border-radius: 3px;
         display: flex;
         flex-direction: row;
         justify-content: space-around;
@@ -46,10 +47,14 @@ div.design-wrapper {
         }
 
         div.knob-seq, div.knob-time, div.knob-rate {
-          border: 1px solid $grey-600;
+          //border: 1px solid $grey-600;
           border-radius: 50%;
-          width: 30px;
-          height: 30px;
+          width: 32px;
+          height: 32px;
+        }
+
+        div.knob-inner {
+
         }
       }
 
