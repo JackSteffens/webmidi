@@ -1,0 +1,68 @@
+@import '../../colors.scss';
+
+div.wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 45px;
+
+  div.label-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 35px;
+    z-index: 1;
+
+    span.label-arp, span.label-seq {
+      font-size: .6rem;
+      color: $grey-300;
+      background-color: $grey-800;
+      width: 26px;
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+
+  div.switch {
+    cursor: pointer;
+    width: 10px;
+    height: 30px;
+    border-radius: 10px;
+    border: 1px solid $grey-400;
+    background-color: $grey-900;
+    z-index: 1;
+
+    div.toggle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid $grey-100;
+      background-color: $grey-800;
+      box-shadow: 0 3px 10px 0 black;
+      box-sizing: border-box;
+      margin-top: 0;
+      transition: margin .4s cubic-bezier(0.5, 0.92, 0.42, 0.94);
+
+      &.top {
+        margin-top: 0;
+      }
+
+      &.bottom {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  div.lines {
+    border: solid $grey-800;
+    border-width: 1px 1px 1px 0;
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    border-radius: 0 50% 50% 0;
+    margin-left: 14px;
+    z-index: 0;
+  }
+}

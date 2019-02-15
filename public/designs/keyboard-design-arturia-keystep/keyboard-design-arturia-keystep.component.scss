@@ -36,15 +36,8 @@ div.design-wrapper {
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
-        width: 200px;
+        width: 240px;
         flex-shrink: 0;
-
-        div.switch {
-          width: 10px;
-          height: 30px;
-          border-radius: 10px;
-          border: 1px solid $grey-600;
-        }
 
         div.knob-seq, div.knob-time, div.knob-rate {
           //border: 1px solid $grey-600;

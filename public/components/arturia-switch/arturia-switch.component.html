@@ -1,0 +1,12 @@
+<div class="wrapper">
+  <div class="label-wrapper">
+    <span class="label-seq" (click)="top = true">Seq</span>
+    <span class="label-arp" (click)="top = false">Arp</span>
+  </div>
+
+  <div class=" switch" (click)="toggleSwitch()">
+    <div class="toggle" [ngClass]="{'bottom' : !top}"></div>
+  </div>
+
+  <div class="lines"></div>
+</div>
