@@ -59,6 +59,7 @@ div.design-wrapper {
         width: 200px;
         flex-shrink: 0;
 
+        // TODO REMOVE ME
         div.punch-hole {
           width: 32px;
           height: 31px;
@@ -188,27 +189,6 @@ div.design-wrapper {
         display: flex;
         flex-direction: column;
         width: 110px;
-        float: left;
-
-        div.hold, div.shift, div.minus, div.plus {
-          border: 1px solid $grey-100;
-          border-radius: 3px;
-          font-weight: bold;
-          font-size: .6rem;
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-
-        div.shift {
-          background-color: $grey-900;
-          color: $grey-600;
-        }
-
-        div.plus {
-          background-color: $grey-600;
-        }
 
         div.control-buttons, div.octave-buttons {
           display: flex;

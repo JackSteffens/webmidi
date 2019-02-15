@@ -24,40 +24,23 @@
       </div>
 
       <div class="media-buttons-wrapper">
-        <div class="punch-hole tap">
-          <div class="outer">
-            <div class="inner">
-              <span>Tap</span>
-            </div>
-          </div>
-        </div>
+        <app-arturia-media-key>
+          <span>Tap</span>
+        </app-arturia-media-key>
 
-        <div class="punch-hole record on">
-          <div class="outer">
-            <div class="inner">
-              <i class="material-icons">fiber_manual_record</i>
-            </div>
-          </div>
-        </div>
+        <app-arturia-media-key class="record" on="true">
+          <i class="material-icons">fiber_manual_record</i>
+        </app-arturia-media-key>
 
-        <div class="punch-hole stop">
-          <div class="outer">
-            <div class="inner">
-              <i class="material-icons">stop</i>
-            </div>
-          </div>
-        </div>
+        <app-arturia-media-key>
+          <i class="material-icons">stop</i>
+        </app-arturia-media-key>
 
-
-        <div class="punch-hole play-pause on">
-          <div class="outer">
-            <div class="inner">
-              <i class="material-icons">pause</i>
-              <span>/</span>
-              <i class="material-icons">play_arrow</i>
-            </div>
-          </div>
-        </div>
+        <app-arturia-media-key on="true">
+          <i class="material-icons">pause</i>
+          <span>/</span>
+          <i class="material-icons">play_arrow</i>
+        </app-arturia-media-key>
       </div>
 
       <div class="top-half-whitespace">&nbsp;</div>
@@ -72,20 +55,13 @@
       <div class="sequence-wrapper">
         <div class="control-buttons">
           <app-arturia-alt-key [on]="true">Hold</app-arturia-alt-key>
-          <!--<div class="punch-hole hold">Hold</div>-->
-
           <span>&nbsp;</span>
-
           <app-arturia-alt-key class="shift">Shift</app-arturia-alt-key>
-          <!--<div class="shift">Shift</div>-->
         </div>
         <div class="octave-buttons">
           <app-arturia-alt-key>Oct-</app-arturia-alt-key>
-          <!--<div class="minus">Oct-</div>-->
-
-          <span>reset</span>
+          <span>Reset</span>
           <app-arturia-alt-key>Oct+</app-arturia-alt-key>
-          <!--<div class="plus">Oct+</div>-->
         </div>
 
         <div class="bars-wrapper">

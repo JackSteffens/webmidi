@@ -16,6 +16,7 @@ import { DesignPreviewComponent } from '../components/design-preview/design-prev
 import { KnobComponent } from '../components/knob/knob.component';
 import { ArturiaSwitchComponent } from '../components/arturia-switch/arturia-switch.component';
 import { ArturiaAltKeyComponent } from '../components/arturia-alt-key/arturia-alt-key.component';
+import { ArturiaMediaKeyComponent } from '../components/arturia-media-key/arturia-media-key.component';
 
 // TODO Move to separate "routing" module
 let routes: Routes = [
@@ -41,7 +42,8 @@ let keyboardDesigns = [KeyboardDesignMinimalComponent, KeyboardDesignArturiaKeys
     DesignPreviewComponent,
     KnobComponent,
     ArturiaSwitchComponent,
-    ArturiaAltKeyComponent
+    ArturiaAltKeyComponent,
+    ArturiaMediaKeyComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

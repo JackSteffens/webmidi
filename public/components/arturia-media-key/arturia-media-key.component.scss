@@ -1,0 +1,76 @@
+@import '../../colors.scss';
+
+div.punch-hole {
+  width: 32px;
+  height: 31px;
+  background-color: $grey-600;
+  box-shadow: 0 0 1px 0 $grey-800;
+  border-radius: 3px;
+  position: relative;
+
+  div.outer {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    left: 1px;
+    top: -1px;
+    border: 1px solid $grey-400;
+    box-shadow: 0 0 15px 0 rgba($grey-900, .25);
+    border-radius: 3px;
+    background-color: $grey-400;
+    transition: box-shadow .1s;
+    cursor: pointer;
+
+    div.inner {
+      color: $grey-900;
+      background-color: $grey-500;
+      box-shadow: inset 0 0 20px 0 $grey-400;
+      width: 28px;
+      height: 28px;
+      border-radius: 3px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      /deep/ i, /deep/ span {
+        font-size: 12px;
+        font-weight: bold;
+        font-stretch: ultra-condensed;
+      }
+    }
+  }
+
+  &.on {
+    box-shadow: inset 0 0 10px 2px $grey-700;
+
+    div.outer {
+      border-color: $grey-100;
+      box-shadow: 0 0 15px 3px rgba($grey-50, 1);
+      border-radius: 3px;
+      background-color: $grey-100;
+      border-bottom-width: 2px;
+
+      div.inner {
+        background-color: $grey-50;
+        box-shadow: inset 0 0 15px 1px $cyan-50;
+      }
+    }
+
+  }
+
+  &.record.on {
+    div.outer {
+      border-color: $red-400;
+      box-shadow: 0 0 15px 0 rgba($red-600, 1);
+      border-radius: 3px;
+      background-color: $red-500;
+      border-bottom-width: 2px;
+
+      div.inner {
+        background-color: $red-200;
+        box-shadow: inset 0 0 15px 0 $red-400;
+      }
+    }
+  }
+}
