@@ -187,7 +187,7 @@ div.design-wrapper {
       div.sequence-wrapper {
         display: flex;
         flex-direction: column;
-        width: 100px;
+        width: 110px;
         float: left;
 
         div.hold, div.shift, div.minus, div.plus {
@@ -213,15 +213,9 @@ div.design-wrapper {
         div.control-buttons, div.octave-buttons {
           display: flex;
           flex-direction: row;
-          justify-content: space-around;
-          align-items: stretch;
-          height: 20px;
+          justify-content: space-between;
+          align-items: flex-end;
           margin: 2px 5px;
-
-          & > div {
-            max-width: 35%;
-            width: 35%;
-          }
 
           & > span {
             width: 30%;

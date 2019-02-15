@@ -71,14 +71,21 @@
     <div class="bottom-half">
       <div class="sequence-wrapper">
         <div class="control-buttons">
-          <div class="hold">Hold</div>
+          <app-arturia-alt-key [on]="true">Hold</app-arturia-alt-key>
+          <!--<div class="punch-hole hold">Hold</div>-->
+
           <span>&nbsp;</span>
-          <div class="shift">Shift</div>
+
+          <app-arturia-alt-key class="shift">Shift</app-arturia-alt-key>
+          <!--<div class="shift">Shift</div>-->
         </div>
         <div class="octave-buttons">
-          <div class="minus">Oct-</div>
+          <app-arturia-alt-key>Oct-</app-arturia-alt-key>
+          <!--<div class="minus">Oct-</div>-->
+
           <span>reset</span>
-          <div class="plus">Oct+</div>
+          <app-arturia-alt-key>Oct+</app-arturia-alt-key>
+          <!--<div class="plus">Oct+</div>-->
         </div>
 
         <div class="bars-wrapper">

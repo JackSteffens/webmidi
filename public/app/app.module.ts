@@ -15,6 +15,7 @@ import { KeyboardDesignSelectorComponent } from '../components/keyboard-design-s
 import { DesignPreviewComponent } from '../components/design-preview/design-preview.component';
 import { KnobComponent } from '../components/knob/knob.component';
 import { ArturiaSwitchComponent } from '../components/arturia-switch/arturia-switch.component';
+import { ArturiaAltKeyComponent } from '../components/arturia-alt-key/arturia-alt-key.component';
 
 // TODO Move to separate "routing" module
 let routes: Routes = [
@@ -22,6 +23,8 @@ let routes: Routes = [
   { path: 'setup', component: SetupPageComponent },
   { path: '', redirectTo: '/splash', pathMatch: 'full' }
 ];
+
+let keyboardDesigns = [KeyboardDesignMinimalComponent, KeyboardDesignArturiaKeystepComponent];
 
 @NgModule({
   declarations: [
@@ -37,14 +40,15 @@ let routes: Routes = [
     KeyboardDesignSelectorComponent,
     DesignPreviewComponent,
     KnobComponent,
-    ArturiaSwitchComponent
+    ArturiaSwitchComponent,
+    ArturiaAltKeyComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     FormsModule
   ],
-  entryComponents: [KeyboardDesignMinimalComponent, KeyboardDesignArturiaKeystepComponent],
+  entryComponents: keyboardDesigns,
   providers: [],
   bootstrap: [AppComponent]
 })

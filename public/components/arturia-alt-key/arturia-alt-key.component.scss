@@ -1,0 +1,91 @@
+@import '../../colors.scss';
+
+div.punch-hole {
+  border-radius: 3px;
+  box-shadow: 0 0 1px 0 #424242;
+  background-color: #757575;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 17px;
+  width: 34px;
+
+  &.shift {
+    outline: 3px solid $blue-500;
+
+    div.outer {
+
+      div.inner {
+        background-color: $grey-900;
+        color: $grey-500;
+        box-shadow: none;
+      }
+    }
+
+  }
+
+  div.outer {
+    position: absolute;
+    width: 30px;
+    height: 16px;
+    left: 1px;
+    top: -2px;
+
+    border: 1px solid $grey-400;
+    box-shadow: 0 0 15px 0 rgba($grey-900, .25);
+    border-radius: 3px;
+    background-color: $grey-400;
+
+    cursor: pointer;
+    transition: box-shadow .1s;
+
+    div.inner {
+      color: $grey-900;
+      background-color: $grey-500;
+      box-shadow: inset 0 0 10px 0 $grey-400;
+
+      width: 30px;
+      height: 16px;
+      border-radius: 3px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      i, span {
+        font-size: .6rem;
+        font-weight: bold;
+        font-stretch: ultra-condensed;
+      }
+    }
+  }
+
+  &.on {
+    box-shadow: inset 0 0 10px 2px $grey-700;
+
+    div.outer {
+      border-color: $grey-100;
+      box-shadow: 0 0 15px 3px rgba($grey-50, 1);
+      border-radius: 3px;
+      background-color: $grey-100;
+    }
+
+    &:not(.shift) {
+      div.outer {
+        div.inner {
+          background-color: $grey-50;
+          box-shadow: inset 0 0 15px 0 $cyan-50;
+        }
+      }
+    }
+
+    &.shift {
+      div.outer {
+        div.inner {
+          color: $grey-50;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+<div class="punch-hole" [ngClass]="[on ? 'on' : '', classAttribute]">
+  <div class="outer" (click)="toggleOn()">
+    <div class="inner">
+      <span><ng-content></ng-content></span>
+    </div>
+  </div>
+</div>
