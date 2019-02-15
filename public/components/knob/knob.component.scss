@@ -1,21 +1,52 @@
 @import "../../colors.scss";
 
-svg {
-  g {
-    transform-origin: center;
+div.knob-wrapper {
+  position: relative;
+  width: 34px;
+  height: 34px;
 
-    polygon.knob-polygon {
-      fill: $grey-900;
-      stroke: $grey-900;
-      stroke-width: 3;
-      stroke-linejoin: round;
-    }
+  svg {
+    margin: 1px 0 0 1px;
+    z-index: 2;
 
-    line.knob-line {
-      stroke: white;
-      stroke-width: 4;
-      stroke-linecap: round;
+    g {
+      transform-origin: center;
+      z-index: 2;
+
+      polygon.knob-polygon {
+        fill: rgba($grey-900, .9);
+        stroke: $grey-900;
+        stroke-width: 3;
+        stroke-linejoin: round;
+      }
+
+      line.knob-line {
+        stroke: white;
+        stroke-width: 4;
+        stroke-linecap: round;
+      }
     }
   }
 
+  div.values-ring {
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    border: 1px dotted $grey-800;
+    box-shadow: inset 0 0 10px 0 $grey-900;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
+
+  div.drop-shadow {
+    box-shadow: 0 10px 20px -4px black;
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    margin: 3px 0 0 3px;
+    z-index: 0;
+  }
 }
