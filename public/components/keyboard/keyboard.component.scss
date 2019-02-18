@@ -19,10 +19,6 @@ div.keys-wrapper {
     border: 1px solid;
     border-radius: 0 0 2px 2px;
     font-size: 8pt;
-    -webkit-transition: background-color 0.1s;
-    -moz-transition: background-color 0.1s;
-    -o-transition: background-color 0.1s;
-    transition: background-color 0.1s;
     position: relative;
 
     div.overlay {
@@ -48,10 +44,6 @@ div.keys-wrapper {
         height: 100%;
         width: 100%;
         box-shadow: inset 0 -1px 25px -10px $grey-900;
-      }
-
-      div.overlay {
-        transition: box-shadow .15s;
       }
     }
 
@@ -120,14 +112,9 @@ div.keys-wrapper {
       div.inner-bottom {
         background-color: $grey-900;
         height: 7px;
-        transition: height .3s;
         border-radius: 10px 10px 0 0;
         box-shadow: inset 0 5px 10px -3px $grey-700;
         width: 22px;
-      }
-
-      div.inner-top, div.inner-bottom, div.overlay {
-        transition: height .15s, box-shadow .15s;
       }
     }
 
@@ -157,7 +144,7 @@ div.keys-wrapper {
         }
 
         div.inner-bottom {
-          height: 0
+          height: 0;
         }
       }
     }
@@ -171,4 +158,21 @@ div.keys-wrapper {
     }
   }
 
+  // Transitions are disabled for performance reasons. But can be enabled with this class
+  &.animated {
+    .key {
+      transition: background-color 0.1s;
+
+      &.sharp {
+
+        div.inner-top {
+          transition: box-shadow .15s;
+        }
+
+        div.inner-bottom {
+          transition: height .15s, box-shadow .15s;
+        }
+      }
+    }
+  }
 }

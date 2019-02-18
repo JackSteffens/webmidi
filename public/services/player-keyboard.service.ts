@@ -17,6 +17,7 @@ export class PlayerKeyboardService {
   private _playerKeyboardDesign: KeyboardDesign;
   private readonly _keyboardConfig: KeyboardConfig;
 
+  // FIXME Remove these. You can find the in/out-puts in the keyboardConfig
   private _inputBehaviourSubject: BehaviorSubject<MIDIInput> = new BehaviorSubject<MIDIInput>(this._input);
   private _outputBehaviourSubject: BehaviorSubject<MIDIOutput> = new BehaviorSubject<MIDIOutput>(this._output);
   private _playerKeyboardDesignBehaviourSubject: BehaviorSubject<KeyboardDesign> = new BehaviorSubject<KeyboardDesign>(this._playerKeyboardDesign);

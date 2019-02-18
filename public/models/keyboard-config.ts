@@ -14,6 +14,8 @@ export class KeyboardConfig {
   // Midi Interface
   private _input: MIDIInput;
   private _output: MIDIOutput;
+  private inputBehaviourSubject: BehaviorSubject<MIDIInput> = new BehaviorSubject(this._input);
+  private outputBehaviourSubject: BehaviorSubject<MIDIOutput> = new BehaviorSubject(this._output);
 
   constructor(input: MIDIInput, output: MIDIOutput, keys: Array<Key>) {
     this._input = input;
@@ -26,6 +28,14 @@ export class KeyboardConfig {
       this.maxKeyNumber = keys[keys.length - 1].number;
       this.maxKeyNote = keys[keys.length - 1].note;
     }
+  }
+
+  get inputObservable(): Observable<MIDIInput> {
+    return this.inputBehaviourSubject.asObservable();
+  }
+
+  get outputObservable(): Observable<MIDIOutput> {
+    return this.outputBehaviourSubject.asObservable();
   }
 
   get keys(): Array<Key> {
@@ -47,8 +57,9 @@ export class KeyboardConfig {
     return this._input;
   }
 
-  set input(value: WebMidi.MIDIInput) {
-    this._input = value;
+  set input(input: WebMidi.MIDIInput) {
+    this._input = input;
+    this.inputBehaviourSubject.next(input);
   }
 
   get output(): WebMidi.MIDIOutput {

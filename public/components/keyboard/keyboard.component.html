@@ -2,9 +2,9 @@
   <div class="key"
        *ngFor="let key of keyboardConfig.keys"
        [ngClass]="[key.sharp ? 'sharp' : 'regular', key.active ? 'active' : 'non-active', key.base]"
-       (mousedown)="sendToOutput(144, key, velocity)"
-       (mouseleave)="key.active ? sendToOutput(144, key, 0) : undefined"
-       (mouseup)="sendToOutput(144, key, 0)">
+       (mousedown)="generateFakeInputMessage(144, key.number, velocity)"
+       (mouseleave)="key.active ? generateFakeInputMessage(144, key.number, 0) : undefined"
+       (mouseup)="generateFakeInputMessage(144, key.number, 0)">
     <div class="inner-top"></div>
     <div class="inner-bottom"></div>
     <div class="overlay"></div>
