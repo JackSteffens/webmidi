@@ -1,0 +1,27 @@
+<div #host class="wrapper flex-column flex-align-start-stretch"
+     [ngClass]="{'hidden':isHidden}">
+  <div class="header flex-row flex-align-start-stretch"
+       draggable="true"
+       (drag)="onHeaderDrag($event)"
+       (dragstart)="onHeaderDragStart($event)">
+    <div class="title-wrapper">
+      <h4>DEBUG CONSOLE</h4>
+    </div>
+
+    <div>
+      <button (click)="toggleConsole()">
+        <i class="material-icons">cancel_presentation</i>
+      </button>
+    </div>
+  </div>
+
+  <div class="content flex-column flex-align-start-stretch">
+    <h4>Events : {{midiEvents.length - 1}}</h4>
+    <div *ngFor="let event of midiEvents">
+      <div *ngIf="event" class="event-wrapper">
+        <span class="info">{{event.commandName}}</span><br>
+        <span class="timestamp">{{event.timestamp | date:'short'}}</span>
+      </div>
+    </div>
+  </div>
+</div>

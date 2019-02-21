@@ -1,0 +1,81 @@
+@import '../../colors.scss';
+
+div.wrapper {
+  position: absolute;
+  z-index: 50;
+  top: 1em;
+  width: 15em;
+  max-height: calc(100% - 2em);
+  height: auto;
+  right: 1em;
+  bottom: 1em;
+  overflow-y: hidden;
+
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba($grey-900, .5);
+  background-color: $grey-100;
+
+  transition: max-height .2s ease-out;
+
+  &.hidden {
+    max-height: 40px;
+  }
+
+  div.header {
+    position: relative;
+    background-color: $grey-100;
+    border-radius: 5px;
+    padding: .25em;
+    height: 40px;
+    flex: 0 0 auto;
+
+    user-select: none;
+    cursor: move;
+
+    div.title-wrapper {
+      width: 100%;
+      flex: 1 1 auto;
+      vertical-align: baseline;
+
+      h4 {
+        margin: 0;
+        vertical-align: middle;
+        line-height: 35px;
+      }
+    }
+  }
+
+  div.content {
+    position: relative;
+    flex: 1 1 auto;
+    max-height: 100%;
+    height: auto;
+
+    h4 {
+      position: sticky;
+      top: 0;
+      background-color: $grey-50;
+      border-bottom: 1px solid $grey-200;
+    }
+
+    background-color: $grey-50;
+    border-radius: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 -2px 10px 0 rgba($grey-900, .25);
+
+    div.event-wrapper {
+      border-top: 1px solid $grey-300;
+      padding: .5em .25em;
+
+      span.info {
+
+      }
+
+      span.timestamp {
+        font-size: small;
+        font-style: italic;
+      }
+    }
+  }
+}

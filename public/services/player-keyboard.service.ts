@@ -6,7 +6,6 @@ import { KeyboardConfig } from '../models/keyboard-config';
 import { BehaviorSubject, Observable } from 'rxjs';
 import MIDIPort = WebMidi.MIDIPort;
 import { MidiService } from './midi.service';
-import { Key } from '../models/key';
 
 @Injectable({
   providedIn: 'root'

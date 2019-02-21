@@ -6,7 +6,7 @@ body, html {
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
+    font-size: 24px; /* Preferred icon size */
     display: inline-block;
     line-height: 1;
     text-transform: none;
@@ -26,4 +26,79 @@ body, html {
     /* Support for IE. */
     font-feature-settings: 'liga';
   }
+}
+
+/* * * * * * * * * * * * * *
+ *
+ * FlexBox presets
+ *
+ */
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-align-start-start {
+  justify-content: flex-start;
+  align-items: start;
+}
+
+.flex-align-start-center {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-align-start-end {
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.flex-align-start-stretch {
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.flex-align-center-start {
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.flex-align-center-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-align-center-end {
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.flex-align-center-stretch {
+  justify-content: center;
+  align-items: stretch;
+}
+
+.flex-align-end-start {
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.flex-align-end-center {
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.flex-align-end-end {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.flex-align-end-stretch {
+  justify-content: flex-end;
+  align-items: stretch;
 }
