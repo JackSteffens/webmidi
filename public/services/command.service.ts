@@ -27,6 +27,23 @@ export class CommandService {
     return notesAsArray.indexOf(foundNote);
   }
 
+  public static isCommandNoteOn(command: number): boolean {
+    return (command >= 144 && command <= 159);
+  }
+
+  public static isCommandNoteOff(command: number): boolean {
+    return (command >= 128 && command <= 143);
+  }
+
+  public static isCommandPitchWheel(command: number): boolean {
+    return (command >= 224 && command <= 239);
+  }
+
+  public static isCommandModulationWheel(command: number, value1: number): boolean {
+    return ((command >= 176 && command <= 191) && value1 === 1);
+  }
+
+
   initNotes(): void {
     CommandService.notes = new Map();
     for (let noteIndex = this.minNote; noteIndex <= this.maxNote; noteIndex++) {

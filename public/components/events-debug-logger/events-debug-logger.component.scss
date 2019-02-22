@@ -53,7 +53,8 @@ div.wrapper {
 
     h4 {
       position: sticky;
-      top: 0;
+      align-self: flex-start;
+      bottom: 0;
       background-color: $grey-50;
       border-bottom: 1px solid $grey-200;
     }

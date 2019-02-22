@@ -2,7 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
+  OnChanges, OnDestroy,
   OnInit,
   SimpleChanges
 } from '@angular/core';
@@ -12,43 +12,32 @@ import { Key } from '../../models/key';
 import MIDIInput = WebMidi.MIDIInput;
 import { select, Store } from '@ngrx/store';
 import {
-  MIDIMessageActionPayload,
+  MIDIMessageActionPayload, ModulationWheelAction,
   NoteOffAction,
-  NoteOnAction
+  NoteOnAction, PitchWheelAction
 } from '../../actions/midi-message.action';
-import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import MIDIOutput = WebMidi.MIDIOutput;
+import { CommandService } from '../../services/command.service';
 
 @Component({
   selector: 'app-keyboard',
   templateUrl: './keyboard.component.html',
   styleUrls: ['./keyboard.component.scss']
 })
-export class KeyboardComponent implements OnInit, OnChanges {
+export class KeyboardComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   keyboardConfig: KeyboardConfig;
-  velocity: number = 100;
-  shouldDispatchEvents = true;
+  @Input()
+  defaultVelocity: number = 100;
+  private shouldDispatchEvents = true;
+  private subscription: Subscription;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private store: Store<MIDIMessageActionPayload>) {
   }
 
   ngOnInit() {
-    this.initMidiMessageEventListener();
-  }
-
-  private initMidiMessageEventListener() {
-    this.store
-        .pipe(select('MIDIMessage'))
-        .pipe(filter((midiMessage: MIDIMessageActionPayload) => {
-          return (midiMessage && (midiMessage.command === 144 || midiMessage.command === 128));
-        }))
-        .subscribe((midiMessage: MIDIMessageActionPayload) => {
-          if (this.keyboardConfig.input && this.keyboardConfig.input.name === midiMessage.sourceInputName) {
-            console.log('KEYBOARD COMPONENT : ', midiMessage);
-            let foundKey = this.searchKey(midiMessage.value1);
-            this.sendToOutput(midiMessage.command, foundKey, midiMessage.value2);
-          }
-        });
+    this.initMidiMessageActionsListener();
   }
 
   /**
@@ -68,14 +57,33 @@ export class KeyboardComponent implements OnInit, OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  private initMidiMessageActionsListener(): void {
+    this.subscription = this.store
+                            .pipe(select('MIDIMessage'))
+                            .subscribe((midiMessageActionPayload: MIDIMessageActionPayload) => {
+                              if (this.keyboardConfig.input
+                                && midiMessageActionPayload
+                                && this.keyboardConfig.input.name === midiMessageActionPayload.sourceInputName) {
+                                this.handleMidiMessageAction(midiMessageActionPayload);
+                              }
+                            });
+  }
+
   /**
    * Binds an `onmidimessage` function to the MIDIInput of the given KeyboardConfig
    */
   initInputMessageListener(): void {
     this.keyboardConfig.inputObservable.subscribe((midiInput: MIDIInput) => {
       if (midiInput) {
-        midiInput.onmidimessage = (e: MIDIMessageEvent) => {
-          this.onMidiInputMessage(e);
+        midiInput.onmidimessage = (midiMessageEvent: MIDIMessageEvent) => {
+          this.onMidiInputMessage(midiMessageEvent);
+          this.changeDetectorRef.detectChanges(); // Required because Angular does not automatically trigger Change detection for midi events
         };
       }
     });
@@ -86,11 +94,12 @@ export class KeyboardComponent implements OnInit, OnChanges {
    * @param command MIDI Command
    * @param key MIDI Data 1, not required for some MIDI Commands
    * @param velocity Data 2, not required for some MIDI Commands
+   * TODO let this create a realistic MIDIMessageEvent
    */
-  public generateFakeInputMessage(command: number, key?: number, velocity?: number) {
-    let message = {
+  public createManualMIDIMessageEvent(command: number, key?: number, velocity?: number) {
+    let message: MIDIMessageEvent | any = {
       data: new Uint8Array([command, key, velocity]),
-      receivedTime: Date.now()
+      timeStamp: performance.now()
     };
     this.onMidiInputMessage(message);
   }
@@ -99,72 +108,65 @@ export class KeyboardComponent implements OnInit, OnChanges {
    * Object parameter is used for mocked input events, such as on-screen keyboard presses.
    * @param message
    */
-  onMidiInputMessage(message: MIDIMessageEvent | { data: Uint8Array, receivedTime: number }) {
+  private onMidiInputMessage(message: MIDIMessageEvent) {
     let command: number = message.data[0];
-    let key: number = message.data[1];
-    let velocity: number = message.data[2];
+    let val1: number = message.data[1];
     console.debug(message);
-    let foundKey = null;
 
-    if (command === 144 && velocity > 0) {
-      // on
-      if (this.shouldDispatchEvents) {
-        this.store.dispatch(new NoteOnAction({
-          command: command,
-          value1: key,
-          value2: velocity,
-          commandName: undefined,
-          timestamp: message.receivedTime,
-          sourceInputName: this.keyboardConfig.input ? this.keyboardConfig.input.name : 'unknown',
-          roomId: 'lobby',
-          playerId: 'anonymous'
-        }));
-      }
-
-    } else if (command === 128 || velocity === 0) {
-      command = 128; // sometimes command 144 with velocity 0 is send instead. We need to re-adjust the command for the right Action to fire
-      // off
-      if (this.shouldDispatchEvents) {
-        this.store.dispatch(new NoteOffAction({
-          command: command,
-          value1: key,
-          value2: velocity,
-          commandName: undefined,
-          timestamp: message.receivedTime,
-          sourceInputName: this.keyboardConfig.input ? this.keyboardConfig.input.name : 'unknown',
-          roomId: 'lobby',
-          playerId: 'anonymous'
-        }));
+    if (this.shouldDispatchEvents) {
+      if (CommandService.isCommandNoteOff(command)) {
+        this.store.dispatch(new NoteOffAction(this.generateMidiMessageActionPayload(message)));
+      } else if (CommandService.isCommandNoteOn(command)) {
+        this.store.dispatch(new NoteOnAction(this.generateMidiMessageActionPayload(message)));
+      } else if (CommandService.isCommandModulationWheel(command, val1)) {
+        this.store.dispatch(new ModulationWheelAction(this.generateMidiMessageActionPayload(message)));
+      } else if (CommandService.isCommandPitchWheel(command)) {
+        this.store.dispatch(new PitchWheelAction(this.generateMidiMessageActionPayload(message)));
       }
     }
-    this.changeDetectorRef.detectChanges();
   }
 
-  // TODO Move function
-  searchKey(key: number): Key {
-    let index = key - this.keyboardConfig.minKeyNumber;
+  private generateMidiMessageActionPayload(messageEvent: MIDIMessageEvent): MIDIMessageActionPayload {
+    return {
+      command: messageEvent.data[0],
+      value1: messageEvent.data[1],
+      value2: messageEvent.data[2],
+      timestamp: messageEvent.timeStamp,
+      sourceInputName: this.keyboardConfig.input ? this.keyboardConfig.input.name : 'null',
+      roomId: 'TO BE IMPLEMENTED', // GET FROM ROOM SERVICE/STORE
+      playerId: 'TO BE IMPLEMENTED' // GET FROM USER SERVICE/STORE
+    };
+  }
+
+  private getKey(keyNumber: number): Key {
+    let index = keyNumber - this.keyboardConfig.minKeyNumber;
     return this.keyboardConfig.keys[index];
   }
 
-  /**
-   * Replace with EventListeners once State Management is in place
-   */
-  public sendToOutput(command, key, velocity): void {
-    this.toggleKey(key, velocity);
-    if (this.validOutput(this.keyboardConfig.output)) {
-      this.keyboardConfig.output.send([command, key.number, velocity]);
+  private handleMidiMessageAction(midiMessage: MIDIMessageActionPayload) {
+    if (CommandService.isCommandNoteOn(midiMessage.command) || CommandService.isCommandNoteOff(midiMessage.command)) {
+      let key = this.getKey(midiMessage.value1);
+      KeyboardComponent.toggleKey(key, midiMessage.command, midiMessage.value2);
+    }
+
+    this.sendToOutput(midiMessage.command, midiMessage.value1, midiMessage.value2);
+  }
+
+  public sendToOutput(command: number, keyNumber: number, velocity: number): void {
+    if (KeyboardComponent.validOutput(this.keyboardConfig.output, this.keyboardConfig.input)) {
+      this.keyboardConfig.output.send([command, keyNumber, velocity]);
     } else {
       console.warn('No connected output port');
     }
   }
 
   // TODO Move
-  validOutput(output): boolean {
-    return output && output.connection && output.connection === 'open';
+  static validOutput(output: MIDIOutput, input: MIDIInput): boolean {
+    return output && output.connection && output.connection === 'open' && output.name !== input.name;
   }
 
   // TODO Move
-  toggleKey(key, velocity): void {
-    key.active = velocity !== 0;
+  static toggleKey(key: Key, command: number, velocity: number): void {
+    key.active = (command === 144 && velocity > 0);
   }
 }

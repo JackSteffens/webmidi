@@ -68,7 +68,7 @@
           <div class="left-bar">
             <div class="bar-inner">
               <span>&#8593;</span>
-              <span>&#8212;</span>
+              <div class="indicator" [ngStyle]="{top:getPitchBarPercentage()}"></div>
               <span>&#8595;</span>
             </div>
             <span>Pitch</span>
@@ -77,7 +77,7 @@
           <div class="right-bar">
             <div class="bar-inner">
               <span>&#8593;</span>
-              <span>&#8212;</span>
+              <div class="indicator" [ngStyle]="{top:getModulationBarPercentage()}"></div>
             </div>
             <span>Mod</span>
           </div>

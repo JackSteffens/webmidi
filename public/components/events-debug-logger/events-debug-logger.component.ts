@@ -1,31 +1,56 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { MIDIMessageActionPayload } from '../../actions/midi-message.action';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-events-debug-logger',
   templateUrl: './events-debug-logger.component.html',
-  styleUrls: ['./events-debug-logger.component.scss']
+  styleUrls: ['./events-debug-logger.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventsDebugLoggerComponent implements OnInit {
-  public isHidden: boolean = true;
+export class EventsDebugLoggerComponent implements OnInit, OnDestroy {
   @ViewChild('host')
   private elementReference: ElementRef;
+  @ViewChild('scrollable')
+  private scrollableWrapperReference: ElementRef;
   private dragDeltaX = 0;
   private dragDeltaY = 0;
   private emptyElement = document.createElement('div');
   private midiEventObservable: Observable<MIDIMessageActionPayload>;
+  private subscription: Subscription;
+
+  public autoScroll: boolean = true;
+  public isHidden: boolean = true;
   public midiEvents: Array<MIDIMessageActionPayload> = [];
 
-  constructor(private renderer: Renderer2, private store: Store<MIDIMessageActionPayload>) {
+  constructor(private renderer: Renderer2, private store: Store<MIDIMessageActionPayload>, private changeDetectorRef: ChangeDetectorRef) {
     this.midiEventObservable = store.pipe(select('MIDIMessage'));
   }
 
   ngOnInit() {
-    this.midiEventObservable.subscribe((midiMessage: MIDIMessageActionPayload) => {
+    this.subscription = this.midiEventObservable.subscribe((midiMessage: MIDIMessageActionPayload) => {
       this.midiEvents.push(midiMessage);
+      this.changeDetectorRef.detectChanges();
+      if (this.autoScroll) {
+        this.scrollableWrapperReference.nativeElement.scrollTo(0, 0);
+      }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   public toggleConsole() {
@@ -51,7 +76,14 @@ export class EventsDebugLoggerComponent implements OnInit {
         this.renderer.setStyle(this.elementReference.nativeElement, 'left', posX + 'px');
       }
     }
+  }
 
+  public reset() {
+    this.midiEvents = [this.midiEvents[this.midiEvents.length - 1]];
+  }
+
+  public getDateTimestamp(timestamp: DOMHighResTimeStamp): number {
+    return new Date(performance.timeOrigin + timestamp).valueOf();
   }
 
 }

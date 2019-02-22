@@ -5,7 +5,7 @@
        (drag)="onHeaderDrag($event)"
        (dragstart)="onHeaderDragStart($event)">
     <div class="title-wrapper">
-      <h4>DEBUG CONSOLE</h4>
+      <h4>DEBUG CONSOLE ({{midiEvents.length - 1}})</h4>
     </div>
 
     <div>
@@ -15,13 +15,23 @@
     </div>
   </div>
 
-  <div class="content flex-column flex-align-start-stretch">
-    <h4>Events : {{midiEvents.length - 1}}</h4>
+  <div #scrollable class="content flex-column-reverse flex-align-start-stretch">
     <div *ngFor="let event of midiEvents">
       <div *ngIf="event" class="event-wrapper">
         <span class="info">{{event.commandName}}</span><br>
-        <span class="timestamp">{{event.timestamp | date:'short'}}</span>
+        <span class="timestamp">
+          [{{event.command}} , {{event.value1}} , {{event.value2}}]
+          -
+          {{getDateTimestamp(event.timestamp) | date:'short'}}
+        </span>
       </div>
+    </div>
+    <div>
+      <label>
+        <input type="checkbox" [(ngModel)]="autoScroll">
+        auto-scroll
+      </label>
+      <button (click)="reset()">reset</button>
     </div>
   </div>
 </div>

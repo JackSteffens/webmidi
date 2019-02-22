@@ -25,8 +25,8 @@ export interface MIDIMessageActionPayload {
   command: number;
   value1?: number | null;
   value2?: number | null;
-  commandName: MIDIMessageActionTypes;
-  timestamp: number; // epoch timestamp in milliseconds
+  commandName?: MIDIMessageActionTypes;
+  timestamp: DOMHighResTimeStamp; // epoch timestamp in milliseconds
   sourceInputName: string;
   roomId?: string | null;
   playerId: string;

@@ -248,13 +248,25 @@ div.design-wrapper {
         }
 
         div.bar-inner {
-          border: 1px solid $grey-300;
-          //border: 1px solid lightgrey;
+          position: relative;
+          border: 1px ridge rgba($grey-300, .5);
           border-radius: 3px;
           height: 114px;
           display: flex;
+          padding: 0.33em 0;
+          box-sizing: border-box;
           flex-direction: column;
           text-align: center;
+
+          div.indicator {
+            position: absolute;
+            width: 80%;
+            left: 10%;
+            height: 1px;
+            border-bottom: 1px solid $grey-500;
+            background-color: $grey-900;
+            top: 0;
+          }
         }
       }
 
