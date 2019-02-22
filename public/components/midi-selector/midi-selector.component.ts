@@ -52,10 +52,18 @@ export class MidiSelectorComponent implements OnInit {
 
   selectPreviousInput(): void {
     this.selectedInput = this.getPreviousPort(this.playerKeyboardService.input, this.availableInputs);
+    if (!this.selectedInput && this.availableInputs[0]) {
+      this.selectedInput = this.availableInputs[0];
+    }
+    this.onInputSelected();
   }
 
   selectPreviousOutput(): void {
     this.selectedOutput = this.getPreviousPort(this.playerKeyboardService.output, this.availableOutputs);
+    if (!this.selectedOutput && this.availableOutputs[0]) {
+      this.selectedOutput = this.availableOutputs[this.availableOutputs.length - 1];
+    }
+    this.onOutputSelected();
   }
 
   getPreviousPort(previousPort: MIDIPort, portList: Array<MIDIPort>): any {

@@ -10,6 +10,7 @@ import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
   styleUrls: ['./keyboard-design-selector.component.scss']
 })
 export class KeyboardDesignSelectorComponent implements OnInit {
+  private readonly DEFAULT_DESIGN_NAME: string = 'Arturia Keystep';
   public keyboardDesigns: Map<string, KeyboardDesign>;
   public selectedDesign: KeyboardDesign;
   public minKey: number = 0;
@@ -26,18 +27,20 @@ export class KeyboardDesignSelectorComponent implements OnInit {
   public selectDesign(designName: string) {
     this.selectedDesign = this.keyboardDesigns.get(designName);
     // prevent animation lag
-    window.requestAnimationFrame(() => {
-      this.playerKeyboardService.playerKeyboardDesign = this.selectedDesign;
-      this.maxKey = this.playerKeyboardService.playerKeyboardDesign.endKeyNumber;
-      this.minKey = this.playerKeyboardService.playerKeyboardDesign.startKeyNumber;
-    });
+    if (this.selectedDesign) {
+      window.requestAnimationFrame(() => {
+        this.playerKeyboardService.playerKeyboardDesign = this.selectedDesign;
+        this.maxKey = this.playerKeyboardService.playerKeyboardDesign.endKeyNumber;
+        this.minKey = this.playerKeyboardService.playerKeyboardDesign.startKeyNumber;
+      });
+    }
   }
 
   private preSelectDesign() {
     if (this.playerKeyboardService.playerKeyboardDesign) {
-      this.selectedDesign = this.keyboardDesigns.get(this.playerKeyboardService.playerKeyboardDesign.designName);
-      this.minKey = this.playerKeyboardService.keyboardConfig.minKeyNumber;
-      this.maxKey = this.playerKeyboardService.keyboardConfig.maxKeyNumber;
+      this.selectDesign(this.playerKeyboardService.playerKeyboardDesign.designName);
+    } else {
+      this.selectDesign(this.DEFAULT_DESIGN_NAME);
     }
   }
 
