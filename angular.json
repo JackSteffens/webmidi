@@ -23,7 +23,9 @@
             "styles": [
               "public/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/tone/build/Tone.js"
+            ]
           },
           "configurations": {
             "production": {
