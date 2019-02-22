@@ -24,7 +24,8 @@ export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesig
   public endKeyNumber: number = KeyboardDesignArturiaKeystepComponent.endKeyNumber;
   keyboardConfig: KeyboardConfig;
 
-  private subscription: Subscription;
+  private storeSubscription: Subscription;
+  private inputSubscription: Subscription;
 
   constructor(private store: Store<MIDIMessageActionPayload>, private changeDetectionRef: ChangeDetectorRef) {
     super();
@@ -32,15 +33,19 @@ export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesig
 
   ngOnInit() {
     AbstractKeyboardDesign.initKeys(this.startKeyNumber, this.endKeyNumber, this.keyboardConfig);
-    this.keyboardConfig.inputObservable.subscribe(() => {
+    this.inputSubscription = this.keyboardConfig.inputObservable.subscribe(() => {
       this.ngOnDestroy();
       this.initMidiMessageActionsListener();
     });
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.storeSubscription) {
+      this.storeSubscription.unsubscribe();
+    }
+
+    if (this.inputSubscription) {
+      this.inputSubscription.unsubscribe();
     }
   }
 
@@ -56,16 +61,15 @@ export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesig
 
   private initMidiMessageActionsListener(): void {
     if (this.keyboardConfig.input) {
-      this.subscription = this.store
-                              .pipe(select('MIDIMessage'))
-                              .subscribe((midiMessageActionPayload: MIDIMessageActionPayload) => {
-                                console.log('ARTURIA KEYSTEP', midiMessageActionPayload);
-                                if (this.keyboardConfig.input
-                                  && midiMessageActionPayload
-                                  && this.keyboardConfig.input.name === midiMessageActionPayload.sourceInputName) {
-                                  this.handleMidiMessageAction(midiMessageActionPayload);
-                                }
-                              });
+      this.storeSubscription = this.store
+                                   .pipe(select('MIDIMessage'))
+                                   .subscribe((midiMessageActionPayload: MIDIMessageActionPayload) => {
+                                     if (this.keyboardConfig.input
+                                       && midiMessageActionPayload
+                                       && this.keyboardConfig.input.name === midiMessageActionPayload.sourceInputName) {
+                                       this.handleMidiMessageAction(midiMessageActionPayload);
+                                     }
+                                   });
     }
   }
 

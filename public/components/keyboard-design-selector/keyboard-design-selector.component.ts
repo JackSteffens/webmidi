@@ -27,7 +27,10 @@ export class KeyboardDesignSelectorComponent implements OnInit {
   public selectDesign(designName: string) {
     this.selectedDesign = this.keyboardDesigns.get(designName);
     // prevent animation lag
-    if (this.selectedDesign) {
+    if (this.selectedDesign
+      && ((this.playerKeyboardService.playerKeyboardDesign
+        && this.selectedDesign.designName !== this.playerKeyboardService.playerKeyboardDesign.designName)
+        || !this.playerKeyboardService.playerKeyboardDesign)) {
       window.requestAnimationFrame(() => {
         this.playerKeyboardService.playerKeyboardDesign = this.selectedDesign;
         this.maxKey = this.playerKeyboardService.playerKeyboardDesign.endKeyNumber;
