@@ -1,17 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { KeyboardConfig } from '../../models/keyboard-config';
 import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
 import { Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { MIDIMessageActionPayload } from '../../actions/midi-message.action';
 import { CommandService } from '../../services/command.service';
+import MIDIInput = WebMidi.MIDIInput;
 
 @Component({
   selector: 'app-keyboard-design-arturia-keystep',
   templateUrl: './keyboard-design-arturia-keystep.component.html',
   styleUrls: ['./keyboard-design-arturia-keystep.component.scss']
 })
-export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesign implements OnInit {
+export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesign implements OnInit, OnDestroy {
   static readonly designName: string = 'Arturia Keystep';
   static readonly startKeyNumber: number = 41; // 41
   static readonly endKeyNumber: number = 72; // 73
@@ -29,6 +30,20 @@ export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesig
     super();
   }
 
+  ngOnInit() {
+    AbstractKeyboardDesign.initKeys(this.startKeyNumber, this.endKeyNumber, this.keyboardConfig);
+    this.keyboardConfig.inputObservable.subscribe(() => {
+      this.ngOnDestroy();
+      this.initMidiMessageActionsListener();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   private handleMidiMessageAction(midiMessage: MIDIMessageActionPayload) {
     if (CommandService.isCommandPitchWheel(midiMessage.command)) {
       this.pitch = midiMessage.value2;
@@ -40,15 +55,18 @@ export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesig
   }
 
   private initMidiMessageActionsListener(): void {
-    this.subscription = this.store
-                            .pipe(select('MIDIMessage'))
-                            .subscribe((midiMessageActionPayload: MIDIMessageActionPayload) => {
-                              if (this.keyboardConfig.input
-                                && midiMessageActionPayload
-                                && this.keyboardConfig.input.name === midiMessageActionPayload.sourceInputName) {
-                                this.handleMidiMessageAction(midiMessageActionPayload);
-                              }
-                            });
+    if (this.keyboardConfig.input) {
+      this.subscription = this.store
+                              .pipe(select('MIDIMessage'))
+                              .subscribe((midiMessageActionPayload: MIDIMessageActionPayload) => {
+                                console.log('ARTURIA KEYSTEP', midiMessageActionPayload);
+                                if (this.keyboardConfig.input
+                                  && midiMessageActionPayload
+                                  && this.keyboardConfig.input.name === midiMessageActionPayload.sourceInputName) {
+                                  this.handleMidiMessageAction(midiMessageActionPayload);
+                                }
+                              });
+    }
   }
 
   public getModulationBarPercentage(): string {
@@ -61,10 +79,5 @@ export class KeyboardDesignArturiaKeystepComponent extends AbstractKeyboardDesig
 
   private calculatePercentage(number: number): number {
     return 95 - (number / 127 * 90);
-  }
-
-  ngOnInit() {
-    AbstractKeyboardDesign.initKeys(this.startKeyNumber, this.endKeyNumber, this.keyboardConfig);
-    this.initMidiMessageActionsListener();
   }
 }
