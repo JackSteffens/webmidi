@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MidiService } from '../../services/midi.service';
+import { PlayerKeyboardService } from '../../services/player-keyboard.service';
 import MIDIInput = WebMidi.MIDIInput;
 import MIDIOutput = WebMidi.MIDIOutput;
 import MIDIInputMap = WebMidi.MIDIInputMap;
 import MIDIOutputMap = WebMidi.MIDIOutputMap;
-import { MidiService } from '../../services/midi.service';
 import MIDIPort = WebMidi.MIDIPort;
-import { PlayerKeyboardService } from '../../services/player-keyboard.service';
 
 @Component({
   selector: 'app-midi-selector',
@@ -23,7 +23,7 @@ export class MidiSelectorComponent implements OnInit {
   public availableOutputs: Array<MIDIOutput>;
   public midiSupported: boolean = false;
 
-  constructor(private playerKeyboardService: PlayerKeyboardService) {
+  constructor(private playerKeyboardService: PlayerKeyboardService, private midiService: MidiService) {
   }
 
   public onInputSelected(): void {
@@ -75,10 +75,48 @@ export class MidiSelectorComponent implements OnInit {
     return null;
   }
 
+  private getSpeakerOutput(): MIDIOutput {
+    return {
+      send: (data: number[] | Uint8Array, timestamp?: Number) => {
+        console.log('SPEAKER RECEIVED DATA:', data);
+        this.midiService.virtualSend(data);
+      },
+      name: 'Speakers',
+      manufacturer: 'none',
+      state: 'connected',
+      connection: 'open',
+      id: 'Speakers',
+      type: 'output',
+      version: '0.0',
+      close(): Promise<WebMidi.MIDIPort> {
+        return new Promise((resolve) => {
+          this.state = 'disconnected';
+          resolve(this);
+        });
+      },
+      open(): Promise<WebMidi.MIDIPort> {
+        return new Promise((resolve) => {
+          this.state = 'connected';
+          resolve(this);
+        });
+      },
+      addEventListener(type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions): void {
+      },
+      clear(): void {
+      },
+      dispatchEvent: (e: Event) => true,
+      onstatechange(e: WebMidi.MIDIConnectionEvent): void {
+      },
+      removeEventListener(type: string, callback: EventListenerOrEventListenerObject | null, options?: EventListenerOptions | boolean): void {
+      }
+    };
+  }
+
   initOutputs() {
     MidiService.getMIDIOutputs()
                .then((outputs: MIDIOutputMap) => {
                  this.availableOutputs = Array.from(outputs.values());
+                 this.availableOutputs.push(this.getSpeakerOutput());
                })
                .then(() => {
                  this.selectPreviousOutput();
