@@ -1,0 +1,92 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+div.pre-loading-screen {
+  opacity: 1;
+  overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  transition: opacity .5s linear;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* pre-loading */
+app-root:empty + div.pre-loading-screen {
+}
+
+
+/* post-loading */
+app-root:not(:empty) + div.pre-loading-screen {
+  opacity: 0;
+}
+
+app-root:not(:empty) + div.pre-loading-screen > div.spinner-container > div.spinner {
+  -webkit-animation: none;
+  -o-animation: none;
+  animation: none;
+}
+
+div.pre-loading-screen > div.spinner-container {
+  height: 100px;
+  width: 100px;
+  outline: 2px solid cyan;
+  position: relative;
+}
+
+div.pre-loading-screen > div.spinner-container > div.spinner {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+
+  -webkit-animation: rotate;
+  -o-animation: rotate;
+  animation: rotate;
+
+  -webkit-animation-duration: 3000ms;
+  -moz-animation-duration: 3000ms;
+  -o-animation-duration: 3000ms;
+  animation-duration: 3000ms;
+
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+div.spinner.red {
+  outline: 2px solid red;
+  -webkit-animation-delay: 0ms;
+  -moz-animation-delay: 0ms;
+  -o-animation-delay: 0ms;
+  animation-delay: 0ms;
+}
+
+div.spinner.green {
+  outline: 2px solid green;
+  -webkit-animation-delay: 1s;
+  -moz-animation-delay: 1s;
+  -o-animation-delay: 1s;
+  animation-delay: 1s;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+

@@ -12,7 +12,7 @@ import { KeyboardConfig } from '../../models/keyboard-config';
 export class DesignPreviewComponent implements OnInit, OnChanges {
   @Input()
   keyboardDesign: KeyboardDesign;
-  @ViewChild(KeyboardDesignDirective)
+  @ViewChild (KeyboardDesignDirective)
   keyboardDesignHost: KeyboardDesignDirective;
   mockKeyboardConfig: KeyboardConfig;
 

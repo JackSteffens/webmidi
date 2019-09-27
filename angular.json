@@ -18,7 +18,8 @@
             "polyfills": "public/polyfills.ts",
             "assets": [
               "public/assets",
-              "public/favicon.ico"
+              "public/favicon.ico",
+              "public/loading-style.css"
             ],
             "styles": [
               "public/styles.scss"
@@ -77,7 +78,8 @@
             ],
             "assets": [
               "public/assets",
-              "public/favicon.ico"
+              "public/favicon.ico",
+              "public/loading-style.css"
             ]
           }
         },
