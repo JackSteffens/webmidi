@@ -1,9 +1,9 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular/core';
-import { KeyboardConfig } from '../../models/keyboard-config';
-import { KeyboardDesignDirective } from '../../directives/keyboard-design.directive';
-import { KeyboardDesign } from '../../models/keyboard-design';
-import { PlayerKeyboardService } from '../../services/player-keyboard.service';
-import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
+import {Component, ComponentFactoryResolver, OnInit, ViewChild} from '@angular/core';
+import {KeyboardConfig} from '../../models/keyboard-config';
+import {KeyboardDesignDirective} from '../../directives/keyboard-design.directive';
+import {KeyboardDesign} from '../../models/keyboard-design';
+import {PlayerKeyboardService} from '../../services/player-keyboard.service';
+import {AbstractKeyboardDesign} from '../../models/abstract-keyboard-design';
 
 @Component({
   selector: 'app-player-keyboard',
@@ -12,7 +12,7 @@ import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
 })
 export class PlayerKeyboardComponent implements OnInit {
   keyboardModel: KeyboardConfig;
-  @ViewChild(KeyboardDesignDirective)
+  @ViewChild(KeyboardDesignDirective, {static: true})
   keyboardDesignHost: KeyboardDesignDirective;
 
   constructor(private playerKeyboardService: PlayerKeyboardService, private componentFactoryResolver: ComponentFactoryResolver) {

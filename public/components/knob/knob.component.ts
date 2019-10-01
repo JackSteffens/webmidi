@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-knob',
@@ -9,7 +9,7 @@ export class KnobComponent implements OnInit, AfterViewInit {
   @Input()
   rotation: number = 0;
   public transformRotate: string = '0deg';
-  @ViewChild('rotatable')
+  @ViewChild('rotatable', {static: true})
   svgElement: ElementRef;
 
   constructor(private renderer: Renderer2) {

@@ -8,9 +8,9 @@ import {
   Renderer2,
   ViewChild
 } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { MIDIMessageActionPayload } from '../../actions/midi-message.action';
-import { Observable, Subscription } from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {MIDIMessageActionPayload} from '../../actions/midi-message.action';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-events-debug-logger',
@@ -19,9 +19,9 @@ import { Observable, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventsDebugLoggerComponent implements OnInit, OnDestroy {
-  @ViewChild('host')
+  @ViewChild('host', {static: true})
   private elementReference: ElementRef;
-  @ViewChild('scrollable')
+  @ViewChild('scrollable', {static: true})
   private scrollableWrapperReference: ElementRef;
   private dragDeltaX = 0;
   private dragDeltaY = 0;

@@ -33,7 +33,7 @@ div.punch-hole {
       justify-content: center;
       align-items: center;
 
-      /deep/ i, /deep/ span {
+      ::ng-deep i, ::ng-deep span {
         font-size: 12px;
         font-weight: bold;
         font-stretch: ultra-condensed;

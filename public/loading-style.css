@@ -26,6 +26,7 @@ app-root:empty + div.pre-loading-screen {
 /* post-loading */
 app-root:not(:empty) + div.pre-loading-screen {
   opacity: 0;
+  pointer-events: none;
 }
 
 app-root:not(:empty) + div.pre-loading-screen > div.spinner-container > div.spinner {

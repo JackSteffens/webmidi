@@ -1,8 +1,8 @@
-import { Component, ComponentFactoryResolver, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { KeyboardDesign } from '../../models/keyboard-design';
-import { KeyboardDesignDirective } from '../../directives/keyboard-design.directive';
-import { AbstractKeyboardDesign } from '../../models/abstract-keyboard-design';
-import { KeyboardConfig } from '../../models/keyboard-config';
+import {Component, ComponentFactoryResolver, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {KeyboardDesign} from '../../models/keyboard-design';
+import {KeyboardDesignDirective} from '../../directives/keyboard-design.directive';
+import {AbstractKeyboardDesign} from '../../models/abstract-keyboard-design';
+import {KeyboardConfig} from '../../models/keyboard-config';
 
 @Component({
   selector: 'app-design-preview',
@@ -12,7 +12,7 @@ import { KeyboardConfig } from '../../models/keyboard-config';
 export class DesignPreviewComponent implements OnInit, OnChanges {
   @Input()
   keyboardDesign: KeyboardDesign;
-  @ViewChild (KeyboardDesignDirective)
+  @ViewChild(KeyboardDesignDirective, {static: true})
   keyboardDesignHost: KeyboardDesignDirective;
   mockKeyboardConfig: KeyboardConfig;
 
