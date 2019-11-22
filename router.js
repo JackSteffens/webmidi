@@ -1,9 +1,8 @@
 exports.setRequestUrl = function (app) {
   // # Controllers #
-  var config = require(__dirname + '/config.js');
-  var user = require('./server/controllers/user.controller.js');
-  var room = require('./server/controllers/room.controller.js');
-  var passport = require('passport');
+  const user = require('./server/controllers/user.controller.js');
+  const room = require('./server/controllers/room.controller.js');
+  const passport = require('passport');
 
   // # Routing #
   // Authentication
@@ -31,4 +30,8 @@ exports.setRequestUrl = function (app) {
   app.post('/api/room/join', room.joinRoom);
   app.delete('/api/room/leave', room.leaveRoom);
   app.post('/api/room', room.createRoom);
+
+  app.get('*', function (req, res) {
+    res.sendFile(__dirname + '/public/dist/index.html');
+  });
 };
